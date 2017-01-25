@@ -7,6 +7,7 @@
 
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
 
 \newenvironment{theorem}[2][Theorem]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
@@ -90,6 +91,42 @@
     \item Worst-case Time Complexity: $T(n) = n$
     \item Average-case Time Complexity: $T_{ave}(n) = n$
   \end{enumerate}
+\end{question}
+
+\begin{question}{3}
+  I assert that the claim is false, and will provide a counter example such
+  that $f \in O(g) \land h(f) \notin O(h(g))$.
+  \begin{proof}
+    Let
+    \begin{align*}
+      f(n) &= n^{2},\\
+      g(n) &= n^{3},\\
+      h(n) &= \frac{1}{n}
+    \end{align*}
+
+    \begin{lemma}{I} $f \in O(g)$, using Theorem 0.2
+      \begin{align*}
+        & \lim_{n\to\infty} \frac{n^{2}}{n^{3}} &  \\
+        & = \lim_{n\to\infty} \frac{1}{n}       & \\
+        & = 0 (>= 0)                            & \text{(Theorem 0.2)}
+      \end{align*}
+    \end{lemma}
+
+    Given the defintion of $f$ and $h$ we can see that $h(f(n)) = \dfrac{1}{n^{2}}$.\\
+    Given the defintion of $g$ and $h$ we can see that $h(g(n)) = \dfrac{1}{n^{3}}$.\\
+    All that remains is to prove that $\frac{1}{n^{2}}\notin O(\frac{1}{n^{3}})$,
+    \begin{align*}
+    & \lim_{n\to\infty} \frac{\frac{1}{n^{2}}}{\frac{1}{n^{3}}} &\\
+        & = \lim_{n\to\infty} \frac{n^3}{n^2} &\\
+        & = \lim_{n\to\infty} n &\\
+        & = \infty (\notin \R^{+}) &\\
+    \end{align*}
+    Hence combining Lemma I with the above proof we have created a counter example
+    such that,
+    \begin{align*}
+      f \in O(g) \land h(f) \notin O(h(g))
+    \end{align*}
+  \end{proof}
 \end{question}
 
 \end{document}
