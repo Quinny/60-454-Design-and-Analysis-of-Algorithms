@@ -1,0 +1,95 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[none]{hyphenat}
+\setlength{\parindent}{0pt}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\begin{document}
+
+\title{Assignment 1}%replace X with the appropriate number
+\author{Quinn Perfetto, 104026025\\ %replace with your name
+ 60-454 Design and Analysis of Algorithms} %if necessary, replace with your course title
+
+\maketitle
+
+\begin{question}{1. (i)}
+  We want to prove that when Algorithm Summation terminates its execution,
+  \begin{align*}
+    \texttt{$y = \sum_{j=0}^{n} a_{j}x^{j}$}
+  \end{align*}
+  \begin{proof}
+    We shall apply induction to prove that after the m$th$ iteration of the
+    for loop the following invariant holds true:
+    \begin{align*}
+      \texttt{$y = \sum_{j=0}^{m - 1} a_{n - j}x^{n - i - j}$}
+    \end{align*}
+
+    \text{(Induction basis)}
+    First, we note that y is initialized to 0 in Line 1. When $m=1$ and $i=n$
+    in Line 3,
+    \begin{align*}
+      y & = a_{n} + x * y\\
+        & = a_{n} + x * 0\\
+        & = a_{n}\\
+        & = a_{n}x^{0}\\
+        & = \sum_{j=0}^{0} a_{n - j}x^{n - i - j}\\
+    \end{align*}
+
+    \text{(Induction Hypothesis)}
+    Suppose for iteration $m - 1 < n$,
+    $y = \sum_{j=0}^{m-2} a_{n - j}x^{n - i - j - 1}$
+
+    \text{(Induction Step)}
+    When Line 3 is executed for the m$th$ time,
+
+    \begin{align*}
+      y & = a_{n - i} + x\sum_{j=0}^{m-2} a_{n - j}x^{n - i - j - 1}\\
+        & = a_{n - i} + \sum_{j=0}^{m-2} a_{n - j}x^{n - i - j} \\
+        & = a_{n - i}x^{0} + \sum_{j=0}^{m-2} a_{n - j}x^{n - i - j}\\
+        & & \text{(Induction Hypothesis)}\\
+        & = \sum_{j=0}^{m-1} a_{n-j}x^{n - i - j}\\
+    \end{align*}
+    Therefore we can conclude that the invariant
+    \texttt{$y = \sum_{j=0}^{m - 1} a_{n - j}x^{n - i - j}$} holds $\forall m > 0$. \\
+
+
+  On the n+1$th$ iteration (where $i = 0$) we then have,
+  \begin{align*}
+    y & = \sum_{j=0}^{n} a_{n - j}x^{n - j}\\
+      & = a_{n}x^{n} + a_{n-1}x^{n-1} + ... + a_{1}x^{1} + a_{0}x^{0}\\
+      & = \sum_{j=0}^{n} a_{j}x^{j} & \text{(By reversing the order of the terms)}\\
+  \end{align*}
+
+  \end{proof}
+\end{question}
+
+\begin{question}{1. (ii)}
+  \leavevmode \\
+  \underline{Key Operation:} Multiplication of real numbers. \\
+  \underline{Input size:} n (The size of the input array) \\ \\
+  The Summation algorithm must perform the key operation on each of
+  the $n$ elements of the input array.
+  \begin{enumerate}
+    \item Worst-case Time Complexity: $T(n) = n$
+    \item Average-case Time Complexity: $T_{ave}(n) = n$
+  \end{enumerate}
+\end{question}
+
+\end{document}
