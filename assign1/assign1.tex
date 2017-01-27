@@ -30,7 +30,7 @@
 
 \maketitle
 
-\begin{question}{1. (i)}
+\begin{question}{1 (i)}
   We want to prove that when Algorithm Summation terminates its execution,
   \begin{align*}
     \texttt{$y = \sum_{j=0}^{n} a_{j}x^{j}$}
@@ -81,7 +81,7 @@
   \end{proof}
 \end{question}
 
-\begin{question}{1. (ii)}
+\begin{question}{1 (ii)}
   \leavevmode \\
   \underline{Key Operation:} Multiplication of real numbers. \\
   \underline{Input size:} n (The size of the input array) \\ \\
@@ -108,13 +108,13 @@
       \begin{align*}
         & \lim_{n\to\infty} \frac{n^{2}}{n^{3}} &  \\
         & = \lim_{n\to\infty} \frac{1}{n}       & \\
-        & = 0 (>= 0)                            & \text{(Theorem 0.2)}
+        & = 0 (\geq 0)                            & \text{(Theorem 0.2)}
       \end{align*}
     \end{lemma}
 
     Given the defintion of $f$ and $h$ we can see that $h(f(n)) = \dfrac{1}{n^{2}}$.\\
     Given the defintion of $g$ and $h$ we can see that $h(g(n)) = \dfrac{1}{n^{3}}$.\\
-    All that remains is to prove that $\frac{1}{n^{2}}\notin O(\frac{1}{n^{3}})$,
+    All that remains is to prove that $\frac{1}{n^{2}}\notin O(\frac{1}{n^{3}})$.  Using Theorem 0.2,
     \begin{align*}
     & \lim_{n\to\infty} \frac{\frac{1}{n^{2}}}{\frac{1}{n^{3}}} &\\
         & = \lim_{n\to\infty} \frac{n^3}{n^2} &\\
@@ -126,6 +126,176 @@
     \begin{align*}
       f \in O(g) \land h(f) \notin O(h(g))
     \end{align*}
+  \end{proof}
+\end{question}
+
+\begin{question}{4}
+  I assert that the following function ordering respects the relationship
+  $g1 = o(g2)$, $g2 = o(g3)$, ..., $g7 = o(g8)$.
+  \begin{align*}
+    10^{100},\ weirdsum,\ lg(n),\ 10^{lglg(n)},\ 2^{\sqrt{2lg(n)}},\ 4^{lgn},\ n^{lgn},\ 2^{n}
+  \end{align*}
+  A series of proofs follow to confirm this ordering,
+
+  \begin{proof} $n^{lgn} = o(2^{n})$
+    \leavevmode \\ \\
+    Given that $n^{k} = o(2^{n}), \forall k > 0$ was proven on Page 48 of Chapter 0,
+    and $lgn > 0, \forall n > 1$ we have $n^{lgn} = o(2^{n})$.
+  \end{proof}
+
+  \begin{proof} $4^{lgn} = o(n^{lgn})$
+    \leavevmode \\ \\
+    It can been seen that $4^{lgn} = n^{lg(4)} = n^{2}$.  Using Theorem 0.2,
+    \begin{align*}
+      &\lim_{n\to\infty} \frac{
+        n^{2}
+      }{
+        n^{lgn}
+      }&\\ \\
+      = &\lim_{n\to\infty} \frac{
+        \dfrac{n^{2}}{n^{2}}
+      }{
+        \dfrac{n^{logn}}{n^{2}}
+      }&\\ \\
+      = & \lim_{n\to\infty} \frac{
+        1
+      }{n^{logn - 2}}\\ \\
+      = & 0
+    \end{align*}
+    Therefore $4^{lgn} = o(n^{lgn})$.
+  \end{proof}
+
+  \begin{proof} $2^{\sqrt{2lgn}} \in o(4^{lgn})$
+    \leavevmode \\ \\
+    It can be seen that $4^{lgn} = (2^{2})^{lgn} = 2^{2lgn}$.
+    Let if we let $x$ represent $2lgn$ and apply Theorem 0.2 we have,
+    \begin{align*}
+      &\lim_{n\to\infty} \frac{
+        2^{\sqrt{x}}
+      }{
+        2^{x}
+      }&\\ \\
+      & = \lim_{n\to\infty} \frac{
+        \dfrac{
+          2^{\sqrt{x}}
+        }{
+          2^{\sqrt{x}}
+        }
+      }{
+        \dfrac{
+          2^{x}
+        }{
+          2^{\sqrt{x}}
+        }
+      }&\\ \\
+      & = \lim_{n\to\infty} \frac{1}{
+        2^{x - \sqrt{x}}
+      }&\\ \\
+      & = 0&\\
+    \end{align*}
+    Therefore $2^{\sqrt{2lgn}} = o(4^{lgn})$.
+  \end{proof}
+\end{question}
+
+\begin{question}{5 (a)} $T(n) = 9T(\frac{n}{3}) + n^{2}lg(n) + 2n$
+  \leavevmode \\
+  \begin{proof}
+  Using the general formula for recurrences we note that,
+  \begin{align*}
+    a = 9, b = 3, f(n) = n^{2}lg(n) + 2n
+  \end{align*}
+
+    \begin{lemma}{I} $f(n) \in \theta(n^{2}lg(n))$, using Theorem 0.2
+      \begin{align*}
+        &\lim_{n\to\infty} \frac{
+        n^{2}lg(n) + 2n
+      }{
+        n^{2}lg(n)
+      }\\ \\
+      & = \lim_{n\to\infty} \frac{
+        \dfrac{
+          n^{2}lg(n) + 2n
+        }{n^{2}}
+      }{
+        \dfrac{
+          n^{2}lg(n)
+        }{n^{2}}
+      }\\ \\
+      & = \lim_{n\to\infty} \frac{
+        lg(n) + \frac{2}{n}
+      }{
+        lg(n)
+      }\\ \\
+      & = \lim_{n\to\infty} \frac{
+        lg(n)
+      }{
+        lg(n)
+      }\\ \\
+      & = 1 (> 0)\\
+      \end{align*}
+    \end{lemma}
+
+    By Lemma I we have $f(n) \in \theta(n^{2}lg(n)) = \theta(n^{log_{b}a}log^{k}n)$ where $k = 1 (\geq 0)$.
+    Therefore using Case 2 of the general recurrence forumla we have,
+    \begin{align*}
+      T(n) \in \theta(n^{2}lg^{2}n)
+    \end{align*}
+  \end{proof}
+\end{question}
+
+\begin{question}{5 (b)} $T(n) = 3T(\frac{n}{3}) + \sqrt{n}$
+  \leavevmode \\
+  \begin{proof}
+    Using the general formula for recurrences we note that,
+    \begin{align*}
+      a = 3, b = 3, f(n) = \sqrt{n}
+    \end{align*}
+
+    \begin{lemma}{1} $f(n) \in O(n^{log_{3}2})$
+      \begin{align*}
+        &\frac{1}{2} \leq log_{3}2  &\\
+        &\sqrt{n} \leq n^{log_{3}2} & (n \geq 0)
+      \end{align*}
+      Therefore for c = 1, and $n_{0} = 0$ we have,
+      \begin{align*}
+        \sqrt{n} <= cn^{log_{3}2}, \forall n_{0} > 0
+      \end{align*}
+      Hence $f(n) \in O(n^{log_{3}2})$.
+    \end{lemma}
+
+    By Lemma I we have $f(n) \in O(n^{log_{b}a - \epsilon})$ where $\epsilon = 1 (>0)$.
+    Therefore using Case 1 of the general recurrence forumla we have,
+    \begin{align*}
+      T(n) \in \theta(n^{log_{3}3}) = \theta(n)
+    \end{align*}
+  \end{proof}
+\end{question}
+
+\begin{question}{5 (c)} $T(n) = 8T(\frac{n}{4}) + n^{2}lg^{2}n$
+  \begin{proof}
+    Using the general formula for recurrences we note that,
+    \begin{align*}
+      a = 8, b = 4, f(n) = n^{2}lg^{2}n
+    \end{align*}
+
+    \begin{lemma}{I} $f(n) \in \Omega(n^{log_{4}9})$
+      \begin{align*}
+        log_{4}9     & \leq 2&\\
+        n^{log_{4}9} & \leq n^{2} &\\
+                     & \leq n^{2}lg^{2}n & (n \geq 2)
+      \end{align*}
+      Therefore for $c = 1$ and $n_{0} = 2$ we have,
+      \begin{align*}
+        n^{2}lg^{2}n \geq cn^{log_{4}9}
+      \end{align*}
+      Hence $f(n) \in \Omega(n^{log_{4}9})$.
+
+      By Lemma I we have $f(n) \in \Omega(n^{log_{b}a + \epsilon})$ where $\epsilon = 1$.
+      Moreover, for sufficiently large $n$,
+      \begin{align*}
+        af(\frac{n}{b} 1
+      \end{align*}
+    \end{lemma}
   \end{proof}
 \end{question}
 
