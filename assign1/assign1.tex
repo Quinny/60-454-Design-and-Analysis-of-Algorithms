@@ -93,6 +93,91 @@
   \end{enumerate}
 \end{question}
 
+\begin{question}{2} $lgn \in \theta(lglg(n!))$
+  \leavevmode \\ \\
+  To prove that $lgn \in \theta(lglg(n!))$ we shall prove that
+  $lgn \in O(lglg(n!)) \land lgn \in \Omega(lglg(n!))$.
+
+  \begin{proof}
+    First we shall prove that $lgn \in O(lglg(n!))$, that is we shall determine
+    a $c \in \R^{+}$ and $n_{0} \in \N$ such that,
+    \begin{align*}
+      & lgn \leq clglg(n!)    & \forall n > n_{0} \\
+      & lgn \leq lglg^{c}(n!) & \\
+      & 2^{lgn} \leq 2^{lglg^{c}(n!)} &\\
+      & n \leq lg^{c}n! &
+    \end{align*}
+    By letting c = 1, we obtain
+    \begin{align*}
+      & n \leq lg(n!) &\\
+      & 2^{n} \leq n! &\\
+    \end{align*}
+
+    \begin{lemma}{1} $2^{n} < n!, \forall n \geq 4$
+      \leavevmode \\
+      We shall prove this by induction on $n$.
+
+      \text{(Induction Basis)} When n = 4, $2^{4} < 4!$ = $16 < 24$. \\
+      \text{(Induction Hypothesis)} Assume $2^{k} < k!, k \geq 4$. \\
+      \text{(Induction Step)} We then have,
+      \begin{align*}
+        2^{k}(k + 1) & < k!(k + 1) &\\
+                     & = (k + 1)! & (I)
+      \end{align*}
+      Also since $k \geq 4$,
+      \begin{align*}
+        2       & < k + 1        &\\
+        2^{k+1} & < (k + 1)2^{k} & (II)\\
+      \end{align*}
+
+      By transitivity of (I) and (II) we obtain $2^{k+1} < (k+1)!$.\\
+      Therefore by Induction $2^{n} < n!, \forall n \geq 4$.
+    \end{lemma}
+
+    Therefore for $c = 1$, and $n_{0} = 4$ we have
+    $lg(n) \leq clglg(n!),\ \forall n > n_{0}$.\\
+    Therefore $lg(n) \in O(lglg(n!))$.
+
+    \leavevmode \\
+    Now we shall prove that $lg(n) \in \Omega(lglg(n!))$, that is we shall
+    determine a $c \in R^{+}$ and $n_{0} \in \N$ such that,
+    \begin{align*}
+      & lg(n) \geq clglg(n!) & \forall n > n_{0}\\
+      & lg(n) \geq lglg^{c}(n!)&\\
+      & 2^{lgn} \geq 2^{lglg^{c}(n!)} & \\
+      & n \geq lg^{c}n! &\\ 
+    \end{align*}
+    By letting $c = \frac{1}{2}$ we obtain,
+    \begin{align*}
+      & n \geq \sqrt{lg(n!)} & \\
+      & n^{2} \geq lg(n!)    & \\
+    \end{align*}
+    
+    It can be seen that $lg(n!) \leq nlg(n)\ (III)$ via,
+    \begin{align*}
+      lg(n!) & = lg(n * (n-1) * (n-2) * ... * 1) & \text{(Definition of $n!$)}\\
+             & = lg(n) + lg(n - 1) + ... + lg(1) & \text{$(lg(mn) = lg(m) + lg(n)$)}\\
+             & \leq lg(n) + lg(n) + ... + lg(n)  &\\
+             & = nlgn                            & 
+    \end{align*}
+
+    Additionally $\forall n > 1$,
+    \begin{align*}
+      2^{n} & > n      &\\
+          n & > lg(n)  & \\
+      n^{2} & > nlg(n) & (IV)\\
+    \end{align*}
+
+    By combining (III) and (IV) we have,
+    $n^{2} > nlg(n) \geq lg(n!),\ \forall n > 1$.\\
+    Therefore for $c = \frac{1}{2}$ and $n_{0} = 1$,
+    $lg(n) \geq clglg(n!),\ \forall n > n_{0}$.\\
+    Therefore $lg(n) \in O(lglg(n!)) \land lg(n) \in \Omega(lglg(n!))$.\\
+    Therefore $lg(n) \in \theta(lglg(n!))$.
+
+  \end{proof}
+\end{question}
+
 \begin{question}{3}
   I assert that the claim is false, and will provide a counter example such
   that $f \in O(g) \land h(f) \notin O(h(g))$.
@@ -315,13 +400,22 @@
         n^{2}lg^{2}n \geq cn^{log_{4}9}
       \end{align*}
       Hence $f(n) \in \Omega(n^{log_{4}9})$.
-
-      By Lemma I we have $f(n) \in \Omega(n^{log_{b}a + \epsilon})$ where $\epsilon = 1$.
-      Moreover, for sufficiently large $n$,
-      \begin{align*}
-        af(\frac{n}{b} 1
-      \end{align*}
     \end{lemma}
+
+    By Lemma I we have $f(n) \in \Omega(n^{log_{b}a + \epsilon})$ where $\epsilon = 1$.
+    Moreover, for sufficiently large $n$,
+    \begin{align*}
+      af(\frac{n}{b}) & = 8(\frac{n}{4})^{2}lg^{2}\frac{n}{4}&\\
+                      & = 8(\frac{n^{2}}{16})lg^{2}\frac{n}{4}&\\
+                      & = \frac{1}{2}(n^{2}lg^{2}\frac{n}{4})&\\
+                      & = \frac{1}{2} \bigl(n^{2}(lgn - 2)^{2}\bigr) &\\
+                      & = \frac{1}{2} \bigl(n^{2}(lg^{2}n - 4lgn + 4)\bigr) &\\
+                      & = \frac{1}{2}n^{2}log^{2}n - 2n^{2}lgn + 2n^{2}&\\
+                      & \leq \frac{1}{2}n^{2}log^{2}n & \text{when $n \geq 2$}\\
+                      & = cn^{2}log^{2}n & \text{where $0 < c = \frac{1}{2} < 1$}\\
+    \end{align*}
+
+    By Case 3 of the general recurrence forumla we thus have $T(n) \in \theta(n^{2}lg^{2}n)$.
   \end{proof}
 \end{question}
 
