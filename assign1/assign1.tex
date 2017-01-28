@@ -155,11 +155,11 @@
       = &\lim_{n\to\infty} \frac{
         \dfrac{n^{2}}{n^{2}}
       }{
-        \dfrac{n^{logn}}{n^{2}}
+        \dfrac{n^{lgn}}{n^{2}}
       }&\\ \\
       = & \lim_{n\to\infty} \frac{
         1
-      }{n^{logn - 2}}\\ \\
+      }{n^{lgn - 2}}\\ \\
       = & 0
     \end{align*}
     Therefore $4^{lgn} = o(n^{lgn})$.
@@ -168,7 +168,7 @@
   \begin{proof} $2^{\sqrt{2lgn}} \in o(4^{lgn})$
     \leavevmode \\ \\
     It can be seen that $4^{lgn} = (2^{2})^{lgn} = 2^{2lgn}$.
-    Let if we let $x$ represent $2lgn$ and apply Theorem 0.2 we have,
+    By letting $x$ represent $2lgn$ and applying Theorem 0.2 we have,
     \begin{align*}
       &\lim_{n\to\infty} \frac{
         2^{\sqrt{x}}
@@ -194,6 +194,32 @@
       & = 0&\\
     \end{align*}
     Therefore $2^{\sqrt{2lgn}} = o(4^{lgn})$.
+  \end{proof}
+
+  \begin{proof} $lg(n) = o(10^{lglg(n)})$
+    \leavevmode \\ \\
+    It can be seen that $10^{lglg(n)} = lg^{lg10}n$, where $lg10 > 1 = 1 + \epsilon$ for some $\epsilon > 2$.
+    Using Theorem 0.2 we have,
+    \begin{align*}
+      &\lim_{n\to\infty} \frac{
+        lg(n)
+      }{
+        lg^{1 + \epsilon}n
+      }&\\ \\
+      = & \lim_{n\to\infty} \frac{
+        \dfrac{lg(n)}{lg(n)}
+      }{
+        \dfrac{lg^{1 + \epsilon}n}{lg(n)}
+      }&\\ \\
+      = & \lim_{n\to\infty} \frac{
+        1
+      }{
+        lg^{\epsilon}n
+      }&\\ \\
+      = & 0 &
+    \end{align*}
+
+    Therefore $lg(n) = o(10^{lglg(n)})$.
   \end{proof}
 \end{question}
 
