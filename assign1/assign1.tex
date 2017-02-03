@@ -195,6 +195,7 @@
         & = \lim_{n\to\infty} \frac{1}{n}       & \\
         & = 0 (\geq 0)                            & \text{(Theorem 0.2)}
       \end{align*}
+      Therefore by Theorem 0.2 we have $f \in O(g)$.
     \end{lemma}
 
     Given the defintion of $f$ and $h$ we can see that $h(f(n)) = \dfrac{1}{n^{2}}$.\\
@@ -211,6 +212,7 @@
     \begin{align*}
       f \in O(g) \land h(f) \notin O(h(g))
     \end{align*}
+    Therefore the claim is false.
   \end{proof}
 \end{question}
 
@@ -347,7 +349,7 @@
     \end{lemma}
 
     By Lemma I we have $f(n) \in \theta(n^{2}lg(n)) = \theta(n^{log_{b}a}log^{k}n)$ where $k = 1 (\geq 0)$.
-    Therefore using Case 2 of the general recurrence forumla we have,
+    Therefore using Case 2 of the general recurrence formula we have,
     \begin{align*}
       T(n) \in \theta(n^{2}lg^{2}n)
     \end{align*}
@@ -361,20 +363,8 @@
     \begin{align*}
       a = 3, b = 3, f(n) = \sqrt{n}
     \end{align*}
-
-    \begin{lemma}{1} $f(n) \in O(n^{log_{3}2})$
-      \begin{align*}
-        &\frac{1}{2} \leq log_{3}2  &\\
-        &\sqrt{n} \leq n^{log_{3}2} & (n \geq 0)
-      \end{align*}
-      Therefore for c = 1, and $n_{0} = 0$ we have,
-      \begin{align*}
-        \sqrt{n} <= cn^{log_{3}2}, \forall n_{0} > 0
-      \end{align*}
-      Hence $f(n) \in O(n^{log_{3}2})$.
-    \end{lemma}
-
-    By Lemma I we have $f(n) \in O(n^{log_{b}a - \epsilon})$ where $\epsilon = 1 (>0)$.
+    Therefore, $f(n) = \sqrt{n} = O(n^{1 - \frac{1}{2}}) = O(n^{log_{b}a - \epsilon})$
+    where $\epsilon = \frac{1}{2} > 0$.
     Therefore using Case 1 of the general recurrence forumla we have,
     \begin{align*}
       T(n) \in \theta(n^{log_{3}3}) = \theta(n)
@@ -389,20 +379,26 @@
       a = 8, b = 4, f(n) = n^{2}lg^{2}n
     \end{align*}
 
-    \begin{lemma}{I} $f(n) \in \Omega(n^{log_{4}9})$
+    \begin{lemma}{I} $f(n) \in \Omega(n^{2})$ using Theorem 0.2,
       \begin{align*}
-        log_{4}9     & \leq 2&\\
-        n^{log_{4}9} & \leq n^{2} &\\
-                     & \leq n^{2}lg^{2}n & (n \geq 2)
+          & \lim_{x\to\infty} \frac{n^{2}}{n^{2}lg^{2}n} &\\ \\
+        = & \lim_{x\to\infty} \frac{
+          \dfrac{n^{2}}{n^{2}}
+        }{
+          \dfrac{n^{2}lg^{2}n}{n^{2}}
+        } &\\ \\
+        = & \lim_{x\to\infty} \frac{
+          1
+        }{
+          lg^{2}n
+        }&\\ \\
+        & = 0 &
       \end{align*}
-      Therefore for $c = 1$ and $n_{0} = 2$ we have,
-      \begin{align*}
-        n^{2}lg^{2}n \geq cn^{log_{4}9}
-      \end{align*}
-      Hence $f(n) \in \Omega(n^{log_{4}9})$.
+      Hence $f(n) \in \Omega(n^{2})$.
     \end{lemma}
 
-    By Lemma I we have $f(n) \in \Omega(n^{log_{b}a + \epsilon})$ where $\epsilon = 1$.
+    By Lemma I we have $f(n) \in \Omega(n^{log_{b}a + \epsilon})$ where
+    $\epsilon = \frac{1}{2} > 0$.
     Moreover, for sufficiently large $n$,
     \begin{align*}
       af(\frac{n}{b}) & = 8(\frac{n}{4})^{2}lg^{2}\frac{n}{4}&\\
@@ -416,6 +412,46 @@
     \end{align*}
 
     By Case 3 of the general recurrence forumla we thus have $T(n) \in \theta(n^{2}lg^{2}n)$.
+  \end{proof}
+\end{question}
+
+\begin{question}{6} $T(n)  = T(\frac{n}{2} + 7)$
+  \begin{proof}
+    We guess that $T(n) = O(n^{2})$.\\
+    (Induction Hypothesis) We first assume that $T(k) \leq ck^{2},\ \forall k < n$ (I).\\
+    Then, when $n > 14$
+    \begin{align*}
+      & n > 14 \Rightarrow 2n > 14 + n \Rightarrow \frac{n}{2} + 7 < n &\\
+      & \Rightarrow T(\frac{n}{2} + 7) \leq c(\frac{n}{2} + 7)^{2} & \text{(by I)}\\
+    \end{align*}
+
+    Therefore, for $ n > 14$,
+    \begin{align*}
+      T(n) & = T(\dfrac{n}{2} + 7) + n^{2}               &\\
+           & \leq c(\dfrac{n}{2} + 7)^{2} + n^{2}        &\\
+           & \leq \dfrac{1}{4}cn^{2} + 7cn + 49c + n^{2} &\\
+    \end{align*}
+
+    For $c \geq 4$,
+    \begin{align*}
+      & c \geq 4           &\\
+      & \frac{c}{4} \geq 1 &\\
+      & \frac{c}{4} + \frac{c}{4} \geq 1 + \frac{c}{4} &\\
+      & \frac{c}{2} \geq \frac{c}{4} + 1 &\\
+      & \frac{1}{2}cn^{2} \geq \frac{1}{4}cn^{2} + n^{2} &\\
+    \end{align*}
+
+    Therefore,
+    \begin{align*}
+      T(n) & \leq \dfrac{1}{4}cn^{2} + 7cn + 49c + n^{2} &\\
+           & \leq \frac{1}{2}cn^{2} + 7cn + 49c & (c \geq 4)\\
+           & \leq cn^{2} & (n \geq 20)
+    \end{align*}
+    Hence, $T(n) \leq cn,\ \forall n \geq 20$ and any $c \geq 4$.\\ \\
+    (Inductive Basis) Let $c' = max(\{T(n)/n^{2}\ |\ 17 \leq n \leq 19\}\ \bigcup\ \{4\})$.\\
+    Then $T(n) \leq c'n^{2},\ \forall n,\ 17 \leq n \leq 19$.\\
+    Hence $T(n) \leq c'n^{2},\ \forall n \geq 17$.\\
+    i.e. $T(n) = O(n^{2})$.\\
   \end{proof}
 \end{question}
 
