@@ -1,0 +1,85 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[none]{hyphenat}
+\usepackage{mathtools}
+\usepackage{verbatim}
+\usepackage[ruled,vlined]{algorithm2e}
+\setlength{\parindent}{0pt}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+\SetKwInput{KwInput}{Input}
+\SetKwInput{KwOutput}{Output}
+
+\begin{document}
+
+\title{Assignment 2}%replace X with the appropriate number
+\author{Quinn Perfetto, 104026025\\ %replace with your name
+ 60-454 Design and Analysis of Algorithms} %if necessary, replace with your course title
+
+\maketitle
+
+\begin{question}{1 (a)}
+  \leavevmode \\ \\
+  \begin{algorithm}[H]
+    \KwInput{$L[lower..upper], lower \leq i \leq upper,\ L[i] \in \{0, 1\}$}
+    \KwOutput{$L[lower..upper]$ sorted in ascending order}
+    \caption{FlipSort(L, lower, upper)}
+    \BlankLine
+
+    \Begin{
+      \If{upper - lower $>$ 1}{
+        FlipSort(L, lower, $\floor{\frac{lower + upper}{2}}$)\;
+        FlipSort(L, $\floor{\frac{lower + upper}{2}}$ + 1, upper)\;
+        \KwRet{Merge($L\bigl[lower..\floor{\frac{lower + upper}{2}}\bigr]$,
+        $L\bigl[\floor{\frac{lower + upper}{2}} + 1..upper\bigr]$)}
+      }
+    }
+  \end{algorithm}
+
+  \begin{algorithm}
+    \caption{Merge(A, B)}
+    \KwInput{Two sorted lists $A[1..n]$ and $B[1..m]$ over $\{0, 1\}^{*}$}
+    \KwOutput{A sorted list $C[1..m+n]$ containing all elements of $A$ and $B$}
+    \textit{Let $<>$ be the list concatenation operator}
+    \BlankLine
+    \Begin{
+      $index_{A}$ := 1\;
+      $index_{B}$ := 1\;
+      \While{$A[index_{A}] == 0 \land index_{A} \leq n$}{
+        $index_{A}$ := $index_{A} + 1$
+      }
+
+      \While{$B[index_{B}] == 0 \land index_{B} \leq m$} {
+        $index_{B}$ := $index_{B} + 1$
+      }
+      \KwRet{$A[1..index_{A} - 1] <> flip(A[index_{A}..n] <> B[1..index_{B} - 1])
+      <> B[index_{B}..m]$}
+    }
+  \end{algorithm}
+\end{question}
+
+\begin{question}{1 (b)}
+  
+\end{question}
+
+\end{document}
