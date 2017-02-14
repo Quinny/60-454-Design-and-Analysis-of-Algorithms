@@ -58,7 +58,7 @@
 
   \begin{algorithm}
     \caption{Merge(A, B)}
-    \KwInput{Two sorted lists $A[1..n]$ and $B[1..m]$ over $\{0, 1\}^{*}$}
+    \KwInput{Two sorted lists $A[1..n]$ and $B[1..m]$ over $\{0, 1\}$}
     \KwOutput{A sorted list $C[1..m+n]$ containing all elements of $A$ and $B$}
     Let $<>$ be the list concatenation operator
     \BlankLine
@@ -103,9 +103,9 @@
     Thus,
     \begin{align*}
       & A[1..index_{A} - 1] <> flip(A[index_{A}..n] <> B[1..index_{B} - 1]) <> B[index_{B}..m] &\\
-    = & 0^{x} <> flip(1^{n-x}, 0^{y}) <> 1^{m-y} & \\
-    = & 0^{x} <> (0^{y} <> 1^{n-x}) <> 1^{m-y} & \\
-    = & 0^{x}0^{y}1^{n-x}1^{m-y} & \\
+      & = 0^{x} <> flip(1^{n-x}, 0^{y}) <> 1^{m-y} & \\
+      & = 0^{x} <> (0^{y} <> 1^{n-x}) <> 1^{m-y} & \\
+      & = 0^{x}0^{y}1^{n-x}1^{m-y} & \\
     \end{align*}
     Which is a sorted list of length $x + y + n - x + m - y = n + m$.
     Therefore the algorithm works correctly.
@@ -114,27 +114,27 @@
   \begin{lemma}{1.2} Algorithm FlipSort correctly produces a sorted list.
     \leavevmode \\ \\
     Induction on the size of the input $n$.\\
-    (Induction Basis) If $n=1$ FlipSort performs no operations and returns a 
+    (Induction Basis) If $n=1$ FlipSort performs no operations and returns a
     single element list which is vacuously sorted.\\
     (Induction Hypothesis) Assume that FlipSort correctly sorts all lists of size $n \leq k,\ n > 1$. \\
     (Induction Step) Let $L'[lower..upper]$ be a list of length $k + 1$, i.e.
     $upper - lower = k + 1$.  The first recursive call produces a list of length,
     \begin{align*}
-           & \floor{\frac{lower + upper}{2}} - lower &\\
-      \leq & \frac{lower + upper}{2} - lower & \\
-         = & \frac{upper-lower}{2} & \\
-         < & upper - lower & (n > 1) & \\
-         = & k + 1 & \\
+       & \floor{\frac{lower + upper}{2}} - lower &\\
+       & \leq \frac{lower + upper}{2} - lower & \\
+       & = \frac{upper-lower}{2} & \\
+       & < upper - lower & (n > 1) & \\
+       & = k + 1 & \\
     \end{align*}
     Thus by the Inductive Assumption the first recursive call produces a correctly
     sorted list $L'[lower..\floor{\frac{lower + upper}{2}}]$ (I).\\
     Additionally the second recursive call produces a list of length,
     \begin{align*}
-          & upper  - \floor{\frac{lower + upper}{2}} + 1 & \\
-     \leq & upper - \frac{lower + upper}{2} + 1 & \\
-        = & \frac{upper - lower}{2} + 1 &\\
-        = & \frac{k + 1}{2} + 1 &\\
-        < & k + 1 & (k + 1 > 2)\\
+      & upper  - \floor{\frac{lower + upper}{2}} + 1 & \\
+      & \leq upper - \frac{lower + upper}{2} + 1 & \\
+      & = \frac{upper - lower}{2} + 1 &\\
+      & = \frac{k + 1}{2} + 1 &\\
+      & < k + 1 & (k + 1 > 2)\\
     \end{align*}
     Thus by the Inductive Assumption the second recursive call produces a correctly
     sorted list $L'[\floor{\frac{lower + upper}{2}}..upper]$ (II). \\ \\
@@ -161,9 +161,10 @@
 
     Let $T_{\floor{}}(n) = 2T(\floor{\frac{n}{2}}) + 2n$ and $T_{\ceil{}}(n) = 2T(\ceil{\frac{n}{2}}) + 2n$. \\
     Using the general formula for solving recurrences, we have\\
-    $f(n) = 2n = \theta(n) = \theta(n^{log_{2}2}) = \theta(n^{log_{b}a}lg^{0}n)$\\
+    $f(n) = 2n = \theta(n) = \theta(n^{log_{2}2}) = \theta(n^{log_{b}a}lg^{0}n)$\\ \\
     Therefore $T_{\floor{}}(n) = T_{\ceil{}}(n) = \theta(nlgn)$.\\
-    Then $T_{\floor{}}(n) \leq T(n) \leq T_{\ceil{}}(n) \Rightarrow T(n) = \theta(nlgn)$.
+    Then $T_{\floor{}}(n) \leq T(n) \leq T_{\ceil{}}(n) \Rightarrow T(n) = \theta(nlgn)$. \\ \\
+    Therefore Algorithm FlipSort correctly sorts the input and runs in $\theta(nlgn)$ time. $\blacksquare$
   \end{lemma}
 \end{question}
 
