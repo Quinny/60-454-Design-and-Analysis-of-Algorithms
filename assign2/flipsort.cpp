@@ -27,7 +27,7 @@ void merge(std::vector<int>& v, int start1, int end1, int start2, int end2) {
 void flipsort(std::vector<int>& v, int i, int j) {
   int size = j - i;
   // Consider size 1 or less to be sorted.
-  if (size > 1) {
+  if (i < j) {
     int mid = size / 2;
     // Flip sort the left half.
     flipsort(v, i, i + mid);

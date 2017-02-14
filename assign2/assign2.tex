@@ -60,26 +60,115 @@
     \caption{Merge(A, B)}
     \KwInput{Two sorted lists $A[1..n]$ and $B[1..m]$ over $\{0, 1\}^{*}$}
     \KwOutput{A sorted list $C[1..m+n]$ containing all elements of $A$ and $B$}
-    \textit{Let $<>$ be the list concatenation operator}
+    Let $<>$ be the list concatenation operator
     \BlankLine
     \Begin{
-      $index_{A}$ := 1\;
-      $index_{B}$ := 1\;
-      \While{$A[index_{A}] == 0 \land index_{A} \leq n$}{
-        $index_{A}$ := $index_{A} + 1$
+      $index_{A}$ := SequentialSearch(A, 1)\;
+      $index_{B}$ := SequentialSearch(B, 1)\;
+      \If{$index_{A} == 0$} {
+        \KwRet{$A <> B$}
       }
 
-      \While{$B[index_{B}] == 0 \land index_{B} \leq m$} {
-        $index_{B}$ := $index_{B} + 1$
+      \If{$index_{B} == 0$} {
+        \KwRet{$B <> A$}
       }
+
       \KwRet{$A[1..index_{A} - 1] <> flip(A[index_{A}..n] <> B[1..index_{B} - 1])
       <> B[index_{B}..m]$}
     }
   \end{algorithm}
+
+  \begin{lemma}{1.1} Algorithm Merge correctly produces a sorted list
+    \leavevmode \\ \\
+    Note that SequentialSearch(L, x) refers to the algorithm defined in Chapter 0
+    Page 10 of the CourseWare, and returns the index of the first occurrence
+    of $x$ in $L$ if it exists, and $0$ otherwise. For the sake of brevity,
+    we take $L[1..0]$ as $[]$ (the empty list). \\
+
+    \textbf{Case 1:} $index_{A} == 0$\\
+    $index_{A} == 0 \Rightarrow A$ contains no instance of 1, i.e.
+    $ 1 \leq i \leq n,\ A[i] == 0$.  Since $0 \leq 0 \leq 1$ and $B$ is assumed
+    to be a sorted list over $\{0, 1\}$, by the transitivity of $\leq$ $A <> B$
+    must also be sorted. Thus the algorithm works correctly.\\
+
+    \textbf{Case 2:} $index_{B} == 0$\\
+    This case is similar to the above case, I thus omit the detail. \\
+
+    \textbf{Case 3:} $index_{A} \geq 1 \land index_{B} \geq 1$\\
+    Without loss of generality, let $A = 0^{x}1^{n-x}$ and
+    $B = 0^{y}1^{m-y}$ such that $x, y \geq 0,\ x \leq n,\ y \leq m$.
+    Since $index_{A}$ refers to the first occurrence of $1$ in $A$,
+    $A[1..index_{A} - 1] = 0^{x}$ and $A[index_{A}..n] = 1^{n-x}$.  By a similar
+    argument for $index_{B}$, $B[1..index_{B} - 1] = 0^{y}$ and $B[index_{B}..m] = 1^{m-y}$.
+    Thus,
+    \begin{align*}
+      & A[1..index_{A} - 1] <> flip(A[index_{A}..n] <> B[1..index_{B} - 1]) <> B[index_{B}..m] &\\
+    = & 0^{x} <> flip(1^{n-x}, 0^{y}) <> 1^{m-y} & \\
+    = & 0^{x} <> (0^{y} <> 1^{n-x}) <> 1^{m-y} & \\
+    = & 0^{x}0^{y}1^{n-x}1^{m-y} & \\
+    \end{align*}
+    Which is a sorted list of length $x + y + n - x + m - y = n + m$.
+    Therefore the algorithm works correctly.
+  \end{lemma}
+
+  \begin{lemma}{1.2} Algorithm FlipSort correctly produces a sorted list.
+    \leavevmode \\ \\
+    Induction on the size of the input $n$.\\
+    (Induction Basis) If $n=1$ FlipSort performs no operations and returns a 
+    single element list which is vacuously sorted.\\
+    (Induction Hypothesis) Assume that FlipSort correctly sorts all lists of size $n \leq k,\ n > 1$. \\
+    (Induction Step) Let $L'[lower..upper]$ be a list of length $k + 1$, i.e.
+    $upper - lower = k + 1$.  The first recursive call produces a list of length,
+    \begin{align*}
+           & \floor{\frac{lower + upper}{2}} - lower &\\
+      \leq & \frac{lower + upper}{2} - lower & \\
+         = & \frac{upper-lower}{2} & \\
+         < & upper - lower & (n > 1) & \\
+         = & k + 1 & \\
+    \end{align*}
+    Thus by the Inductive Assumption the first recursive call produces a correctly
+    sorted list $L'[lower..\floor{\frac{lower + upper}{2}}]$ (I).\\
+    Additionally the second recursive call produces a list of length,
+    \begin{align*}
+          & upper  - \floor{\frac{lower + upper}{2}} + 1 & \\
+     \leq & upper - \frac{lower + upper}{2} + 1 & \\
+        = & \frac{upper - lower}{2} + 1 &\\
+        = & \frac{k + 1}{2} + 1 &\\
+        < & k + 1 & (k + 1 > 2)\\
+    \end{align*}
+    Thus by the Inductive Assumption the second recursive call produces a correctly
+    sorted list $L'[\floor{\frac{lower + upper}{2}}..upper]$ (II). \\ \\
+    Finally by Lemma 1.1, (I) and (II) we know that the Merge Algorithm correctly
+    merges the resulting lists into a sorted list $L'[lower..upper]$.\\
+    Therefore Algorithm FlipSort works correctly.
+  \end{lemma}
+
+  \begin{lemma}{1.3} Algorithm Merge requires at most $2n + 2m$ operations \\ \\
+    As proved in the CourseWare SequentialSearch search performs at most $n$
+    comparisons for $index_{A}$ and at most $m$ comparisons for $index_{B}$.
+    Further, since $Flip$ requires $O(j - i)$ time and $j - i \leq n + m$ we
+    have at most $(n + m) + (n + m) = 2n + 2m$ operations.
+  \end{lemma}
+
+  \begin{lemma}{1.4} Algorithm FlipSort is $\theta(nlgn)$ \\ \\
+    Let $T(n)$ be the time required to sort a list of $n$ elements with FlipSort.\\
+    \[
+      T(n) = \begin{cases}
+                T(\floor{\frac{n}{2}}) + T(\ceil{\frac{n}{2}}) + 2n & n > 1 \\
+                0                                    & otherwise \\
+             \end{cases}
+    \]
+
+    Let $T_{\floor{}}(n) = 2T(\floor{\frac{n}{2}}) + 2n$ and $T_{\ceil{}}(n) = 2T(\ceil{\frac{n}{2}}) + 2n$. \\
+    Using the general formula for solving recurrences, we have\\
+    $f(n) = 2n = \theta(n) = \theta(n^{log_{2}2}) = \theta(n^{log_{b}a}lg^{0}n)$\\
+    Therefore $T_{\floor{}}(n) = T_{\ceil{}}(n) = \theta(nlgn)$.\\
+    Then $T_{\floor{}}(n) \leq T(n) \leq T_{\ceil{}}(n) \Rightarrow T(n) = \theta(nlgn)$.
+  \end{lemma}
 \end{question}
 
 \begin{question}{1 (b)}
-  
+
 \end{question}
 
 \end{document}
