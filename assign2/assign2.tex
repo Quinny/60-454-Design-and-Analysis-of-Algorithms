@@ -29,6 +29,7 @@
 
 \SetKwInput{KwInput}{Input}
 \SetKwInput{KwOutput}{Output}
+\SetKwInput{KwLet}{Let}
 
 \begin{document}
 
@@ -60,7 +61,7 @@
     \caption{Merge(A, B)}
     \KwInput{Two sorted lists $A[1..n]$ and $B[1..m]$ over $\{0, 1\}$}
     \KwOutput{A sorted list $C[1..m+n]$ containing all elements of $A$ and $B$}
-    Let $<>$ be the list concatenation operator
+    \KwLet{$<>$ be the list concatenation operator}
     \BlankLine
     \Begin{
       $index_{A}$ := SequentialSearch(A, 1)\;
@@ -207,7 +208,47 @@
       & \Rightarrow A[i-m+1] \succ A[i-m+2] \land i-m+1 > 0 &
     \end{align*}
   \end{lemma}
+\end{question}
 
+\begin{question}{3}
+  \leavevmode \\
+  \begin{algorithm}
+    \caption{MaximumMinimumDistance}
+    \KwInput{A set of points $P$ in the Euclidean plane}
+    \KwOutput{$\{W, \overline{W}\}$ such that $dist\{W, \overline{W}\}$ is
+    maximized over all partitions of $P$}
+    \KwLet{a weighted undirected edge $E$ be defined by the 2-tuple $(\{u, v\}, w)$
+    where $u$ and $v$ are the endpoints of $E$ and $w$ is the weight}
+    \BlankLine
+    PairwiseDistanceGraph := $\{(\{u, v\},\ d(u, v))\ |\ u,\ v \in P\}$\;
+    MST := MinimumSpanningTree(PairwiseDistanceGraph)\;
+    HeaviestEdge := max(MST by w)\;
+    W, $\overline{W}$ := PairwiseDistanceGraph - \{HeaviestEdge\}\;
+  \end{algorithm}
+
+  \begin{lemma}{3.1} Algorithm MaximumMinimumDistance correctly produces
+    $\{W, \overline{W}\}$ \\
+
+    We shall first prove that $\{W, \overline{W}\}$ is a disjoint parition
+    of $P$.
+    \begin{proof}
+      Note that $\forall p \in P$, p is a vertex of PairwiseDistanceGraph.
+      Since MinimumSpanningTree is assumed to work correctly, it follows that
+      $\forall p \in P$, p is a vertex of MST (I).  Since every edge in a tree is
+      a cut edge, MST - \{HeaviestEdge\} must produce a disconnected graph
+      containing two disjoint components, i.e. $W$ and $\overline{W}$.
+      By (I) we thus have $W \cap \overline{W} = \emptyset$ and
+      $W \cup \overline{W} = P$.  Thus $\{W, \overline{W}\}$ is a disjoint
+      partition of P.
+    \end{proof}
+
+    It remains to show that $dist(W, \overline{W})$ is maximized over all other
+    paritions of P.
+
+    \begin{proof}
+
+    \end{proof}
+  \end{lemma}
 \end{question}
 
 \end{document}
