@@ -106,7 +106,7 @@
       & A[1..index_{A} - 1] <> flip(A[index_{A}..n] <> B[1..index_{B} - 1]) <> B[index_{B}..m] &\\
       & = 0^{x} <> flip(1^{n-x}, 0^{y}) <> 1^{m-y} & \\
       & = 0^{x} <> (0^{y} <> 1^{n-x}) <> 1^{m-y} & \\
-      & = 0^{x}0^{y}1^{n-x}1^{m-y} & \\
+      & = 0^{x}0^{y}1^{n-x}1^{m-y} &
     \end{align*}
     Which is a sorted list of length $x + y + n - x + m - y = n + m$.
     Therefore the algorithm works correctly.
@@ -125,7 +125,7 @@
        & \leq \frac{lower + upper}{2} - lower & \\
        & = \frac{upper-lower}{2} & \\
        & < upper - lower & (n > 1) & \\
-       & = k + 1 & \\
+       & = k + 1 & 
     \end{align*}
     Thus by the Inductive Assumption the first recursive call produces a correctly
     sorted list $L'[lower..\floor{\frac{lower + upper}{2}}]$ (I).\\
@@ -135,7 +135,7 @@
       & \leq upper - \frac{lower + upper}{2} + 1 & \\
       & = \frac{upper - lower}{2} + 1 &\\
       & = \frac{k + 1}{2} + 1 &\\
-      & < k + 1 & (k + 1 > 2)\\
+      & < k + 1 & (k + 1 > 2)
     \end{align*}
     Thus by the Inductive Assumption the second recursive call produces a correctly
     sorted list $L'[\floor{\frac{lower + upper}{2}}..upper]$ (II). \\ \\
@@ -201,11 +201,60 @@
     (Induction Basis') When $m = 1$, $A[k-m+1..k] = A[k..k]$ which is a vacuously
     sorted single element list.\\
     (Induction Hypothesis') Suppose that just before the $m-1th$ iteration
-    $A[i-(m-1)+1..k] = A[i-m+2..k]$ is sorted.  Note that $j = i - (m-1) = i-m+1$.\\
-    (Induction Step) Following the $m-1th$ iteration we have,
+    $A[k-(m-1)+1..k] = A[k-m+2..k]$ is sorted.  Note that $j = k - (m - 1) = k - m +1$.\\
+    (Induction Step') Following the $m-1th$ iteration we have,
     \begin{align*}
       & A[j] \succ A[j + 1] \land j > 0 &\\
-      & \Rightarrow A[i-m+1] \succ A[i-m+2] \land i-m+1 > 0 &
+      & \Rightarrow A[k-m+1] \succ A[k-m+2] \land k-m+1 > 0 &
+    \end{align*}
+    Calling Flip(A, k - m +1, k - m +2) effectively swaps the two positions
+    as they are adjacent in the array.  Following the call to Flip we have,
+    \begin{align*}
+      & A[k-m+1] \lesssim A[k-m+2] \land A[k-m+2..k] \text{ is sorted} & \\
+      & \Rightarrow A[k-m+1..k] \text{ is sorted} &\\
+    \end{align*}
+    Therefore just before the start of the m$th$ iteration $A[k-m+1..k]$ is sorted,
+    i.e. the proposed invariant holds for all iterations of the loop (I).\\ \\
+    (Induction Step) Given (I), and substituting $j$ for $k-m$, upon terminaiton
+    of the inner while loop we have,
+    \begin{align*}
+      & A[1..k-1] \text{ is sorted} \land A[j + 1..k] \text{ is sorted} \land (j = 0 \lor A[j] \lesssim A[j + 1]) & (j = k - m)
+    \end{align*}
+
+    \textbf{Case 1:} j = 0\\
+    This means that the inner while loop iterated $k-1$ times, following the
+    $k-1th$ iteration we have,
+    \begin{align*}
+      A[j + 1..k] \text{ is sorted} \land j = 0 \Rightarrow A[1..k] \text{ is sorted}
+    \end{align*}
+    Thus the invariant holds. \\
+
+    \textbf{Case 2:} $A[j] \lesssim A[j + 1]$ \\
+    We thus have,
+    \begin{align*}
+      & A[j] \lesssim A[j + 1] \land A[j + 1..k] \text{ is sorted} & \\
+      & \Rightarrow A[j..k] \text{ is sorted} &
+      & A[1..k-1] \text{ is sorted} \land A[j..k] \text{ is sorted} \Rightarrow A[1..k] \text{ is sorted}
+    \end{align*}
+    Thus the invariant holds.\\
+    Therefore Following the n$th$ iteration we have $A[1..n]$ is sorted.\\
+    Hence, the Algorithm works correctly.
+  \end{lemma}
+
+  \begin{lemma}{1.5} FlipSort runs in O($n^{2}lgn$) time \\ \\
+    \textbf{Key Operations:} Comparison of integers, calls to Flip \\
+    Given that the inner while loop will perform at most $i - 1$ comparisons,
+    and make at most $i - 1$ calls to Flip, each of which run in O($j + 1 - j$) = O(1) time,
+    we have,
+    \begin{align*}
+      & \sum_{i=2}^{n} 2(i-1) &\\
+      & = 2\sum_{i=2}^{n}i-1 &\\
+      & = 2(\sum_{i=2}^{n}i + - \sum_{i=2}^{n}1) &\\
+      & = 2(\frac{n(n + 1)}{2} + 1 - (n - 1))&\\
+      & = 2(\frac{n^{2} + n}{2} + 1 - n  + 1)&\\
+      & = n^{2} - n + 4 & \\
+      & = O(n^{2}) & \\
+      & = O(n^{2}lgn) &
     \end{align*}
   \end{lemma}
 \end{question}
@@ -242,13 +291,57 @@
       partition of P.
     \end{proof}
 
-    It remains to show that $dist(W, \overline{W})$ is maximized over all other
+    It remains to show that $dist(W, \overline{W})$ is maximum over all other
     paritions of P.
 
     \begin{proof}
-
+      Suppose there exists a disjoint partition $\{X, \overline{X}\}$ of $P$ such
+      that,
+      \begin{align*}
+        dist(X, \overline{X}) > dist(W, \overline{W}),\ \{X, \overline{X}\} \neq \{W, \overline{W}\}
+      \end{align*}
+      Since $\{X, \overline{X}\} \neq \{W, \overline{W}\}$
+      there must exist some pair of vertices $\{u, v\}$ such that $\{u, v\}$
+      are in the same component of $\{W, \overline{W}\}$ and different
+      components of $\{X, \overline{X}\}$.
+      Let $H_{e}$ be the weight of the heaviest edge that was removed from $MST$.
+      This implies that $dist(W, \overline{W}) = H_{e}$ and $d(u, v) \leq H_{e}$.
+      Since $u$ and $v$ lie in different components of $\{X, \overline{X}\}$, then
+      $dist(X, \overline{X}) \leq d(u, v)$.  Hence we have,
+      \begin{align*}
+        & dist(W, \overline{W}) = H_{e} \land d(u, v) \leq H_{e} & \\
+        & \Rightarrow d(u, v) \leq dist(W, \overline{W}) & (I) \\
+        & dist(X, \overline{X}) \leq d(u, v) & (II) \\
+        & \Rightarrow dist(X, \overline{X}) \leq dist(W, \overline{W}) & \text{(I, II, Transitivity)}
+      \end{align*}
+      Which is a contradiction!\\ \\
+      Therefore $dist(W, \overline{W})$ must be a maximum over all other paritions of $P$.
     \end{proof}
+
+    Therefore the Algorithm MaximumMinimumDistance correctly produces the disjoint
+    parition $\{W, \overline{W}\}$ of P such that,
+    \begin{align*}
+      dist(W, \overline{W}) = max(\{dist(S, \overline{S})\ |\ \{S, \overline{S}\} \text{ is a parition of P}\})
+    \end{align*}
   \end{lemma}
+
+  \begin{lemma}{3.2} Algorithm MaximumMinimumDistance runs in O($n^{2}$) time where $n = |P|$ \\ \\
+    \textbf{Key Operations:} Computing the Euclidean distance between points, comparison of integers \\ \\
+    There are $|P| \choose 2$ distinct pairs of points within $P$.  Thus to
+    compute the PairwiseDistanceGraph, $|P| \choose 2$ Euclidean distances must be calculated. \\ \\
+    The minmum spanning tree of the PairwiseDistanceGraph will have at most $|P| \choose 2$ edges,
+    therefore determining the heaviest edge will require at most $|P| \choose 2$ - 1 comparisons.\\ \\
+    Together we have,
+    \begin{align*}
+      & {|P| \choose 2} + {|P| \choose 2} - 1 & \\
+      & = 2{|P| \choose 2} - 1 & \\
+      & = |P|(|P| - 1) - 1 & \\
+      & = |P|^{2} - |P| - 1 & \\
+      & = O(|P|^{2}) &
+    \end{align*}
+    Therefore Algorithm MaximumMinimumDistance runs in O($n^{2}$) time where $n = |P|$.
+  \end{lemma}
+
 \end{question}
 
 \end{document}
