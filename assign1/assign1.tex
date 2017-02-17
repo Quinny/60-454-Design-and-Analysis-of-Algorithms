@@ -474,20 +474,24 @@
 
     \begin{lemma}{I} $f(n) \in \Omega(n^{2})$ using Theorem 0.2,
       \begin{align*}
-          & \lim_{x\to\infty} \frac{n^{2}}{n^{2}lg^{2}n} &\\ \\
+        & \lim_{x\to\infty} \frac{
+            n^{2}lg^{2}n
+          }{
+            n^{2}
+          } &\\ \\
         = & \lim_{x\to\infty} \frac{
-          \dfrac{n^{2}}{n^{2}}
-        }{
           \dfrac{n^{2}lg^{2}n}{n^{2}}
+        }{
+          \dfrac{n^{2}}{n^{2}}
         } &\\ \\
         = & \lim_{x\to\infty} \frac{
-          1
-        }{
           lg^{2}n
+        }{
+          1
         }&\\ \\
-        & = 0 &
+        & = \infty &
       \end{align*}
-      Hence $f(n) \in \Omega(n^{2})$.
+      Hence by Theorem 0.2 $f(n) \in \Omega(n^{2})$.
     \end{lemma}
 
     By Lemma I we have $f(n) \in \Omega(n^{log_{b}a + \epsilon})$ where
