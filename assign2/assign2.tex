@@ -41,6 +41,10 @@
 
 \begin{question}{1 (a)}
   \leavevmode \\ \\
+  \textbf{Idea:} FlipSort is essentially MergeSort with a modified Merge
+  subroutine that assumes the sorted input arrays consist solely of 1's and 0's.
+  These sorted arrays can be merged by flipping the inner unsorted subsequence
+  between the first occurrence of 1 in either.\\
   \begin{algorithm}[H]
     \KwInput{$L[lower..upper], lower \leq i \leq upper,\ L[i] \in \{0, 1\}$}
     \KwOutput{$L[lower..upper]$ sorted in ascending order}
@@ -57,7 +61,7 @@
     }
   \end{algorithm}
 
-  \begin{algorithm}
+  \begin{algorithm}[H]
     \caption{Merge(A, B)}
     \KwInput{Two sorted lists $A[1..n]$ and $B[1..m]$ over $\{0, 1\}$}
     \KwOutput{A sorted list $C[1..m+n]$ containing all elements of $A$ and $B$}
@@ -78,6 +82,8 @@
       <> B[index_{B}..m]$}
     }
   \end{algorithm}
+
+  \pagebreak
 
   \begin{lemma}{1.1} Algorithm Merge correctly produces a sorted list
     \leavevmode \\ \\
@@ -125,7 +131,7 @@
        & \leq \frac{lower + upper}{2} - lower & \\
        & = \frac{upper-lower}{2} & \\
        & < upper - lower & (n > 1) & \\
-       & = k + 1 & 
+       & = k + 1 &
     \end{align*}
     Thus by the Inductive Assumption the first recursive call produces a correctly
     sorted list $L'[lower..\floor{\frac{lower + upper}{2}}]$ (I).\\
@@ -169,94 +175,126 @@
   \end{lemma}
 \end{question}
 
+\pagebreak
+
 \begin{question}{1 (b)}
-  \leavevmode \\
-  \begin{algorithm}
-    \caption{InsertFlipSort}
-    \KwInput{An array of elements $A[1..n]$ drawn from a totally ordered set}
-    \KwOutput{$A[1..n]$ sorted in ascending order}
+  \leavevmode \\ \\
+  \textbf{Idea:} QuickFlipSort is a variant of QuickSort which uses FlipSort
+  to perform the partition operation.\\
+  \begin{algorithm}[H]
+    \caption{QuickFlipSort}
+    \KwInput{An array of elements $A[lower..upper]$ drawn from a totally ordered set}
+    \KwOutput{$A[lower..upper]$ sorted in ascending order}
     \BlankLine
 
     \Begin{
-      \For{$i := 2$ \KwTo $n$} {
-        j := i - 1\;
-        \While{$A[j] \succ A[j + 1] \land j > 0$} {
-          Flip($A$, j, j + 1)\;
-          j := j - 1\;
-        }
+      \If{upper - lower $>$ 1} {
+        $A'[lower+1..upper]$ := \{y $|\ x \in A[lower+1..upper]$, y = x $\gtrsim A[lower]$\}\;
+        FlipSort($A'$, lower+1, upper)\;
+        firstone := SequentialSearch($A'$, 1)\;
+
+        splitpoint := $\begin{cases}
+          upper, & \text{if firstone} == 0\\
+          \text{firstone} - 1, & \text{otherwise}
+        \end{cases}$ \;
+
+        Flip(A, lower, splitpoint)\;
+        QuickFlipSort($A$, lower, splitpoint - 1)\;
+        QuickFlipSort($A$, splitpoint + 1, upper)\;
       }
     }
   \end{algorithm}
-  \begin{lemma}{1.4} Algorithm InsertFlipSort correctly produces a sorted list \\ \\
-    We shall prove by induction that just before the k$th$ iteration of the
-    outer most for loop, $A[1..k]$ is sorted. \\
-    (Induction Basis) For $k = 1$ we have $A[1..k] = A[1..1]$ which is a vacuously
-    sorted single element list.\\
-    (Induction Hypothesis) We assume just before the $k-1th$ iteration that
-    $A[1..k - 1]$ is sorted.  We note that $i = k$. \\
-    (Induction Step) In order to prove that this invariant holds after the $k-1th$
-    iteration, we will apply induction on the number of iterations of the inner
-    while loop to show that just before the m$th$ iteration of the loop,
-    $A[k-m+1..k]$ is sorted. \\ \\
-    (Induction Basis') When $m = 1$, $A[k-m+1..k] = A[k..k]$ which is a vacuously
-    sorted single element list.\\
-    (Induction Hypothesis') Suppose that just before the $m-1th$ iteration
-    $A[k-(m-1)+1..k] = A[k-m+2..k]$ is sorted.  Note that $j = k - (m - 1) = k - m +1$.\\
-    (Induction Step') Following the $m-1th$ iteration we have,
-    \begin{align*}
-      & A[j] \succ A[j + 1] \land j > 0 &\\
-      & \Rightarrow A[k-m+1] \succ A[k-m+2] \land k-m+1 > 0 &
-    \end{align*}
-    Calling Flip(A, k - m +1, k - m +2) effectively swaps the two positions
-    as they are adjacent in the array.  Following the call to Flip we have,
-    \begin{align*}
-      & A[k-m+1] \lesssim A[k-m+2] \land A[k-m+2..k] \text{ is sorted} & \\
-      & \Rightarrow A[k-m+1..k] \text{ is sorted} &\\
-    \end{align*}
-    Therefore just before the start of the m$th$ iteration $A[k-m+1..k]$ is sorted,
-    i.e. the proposed invariant holds for all iterations of the loop (I).\\ \\
-    (Induction Step) Given (I), and substituting $j$ for $k-m$, upon terminaiton
-    of the inner while loop we have,
-    \begin{align*}
-      & A[1..k-1] \text{ is sorted} \land A[j + 1..k] \text{ is sorted} \land (j = 0 \lor A[j] \lesssim A[j + 1]) & (j = k - m)
-    \end{align*}
 
-    \textbf{Case 1:} j = 0\\
-    This means that the inner while loop iterated $k-1$ times, following the
-    $k-1th$ iteration we have,
+  \begin{lemma}{1.5} Algorithm QuickFlipSort correctly produces a sorted list. \\ \\
+    We shall show this by induction on $n$, the size of the input array. \\
+    (Induction Basis) For $n=1$ the algorithm performs no operations and thus
+    produces a vacuously sorted single element list.\\
+    (Induction Hypothesis) Assume that QuickFlipSort correctly sorts all lists
+    of size \\$n,\ \forall n \leq k,\ n > 1$. \\
+    (Induction Step) Let $L = [lower..upper]$ such that $upper - lower = k + 1$.\\
+    Since the correctness of FlipSort has been proven, $A'$ will contain a sorted
+    list of 0's and 1's such that all 0's correspond to values in $A[lower+1..upper]$
+    that are less than $A[lower]$, and all 1's correspond to values that are
+    greater than or equal to $A[lower]$.\\ \\
+    We shall now show that following the call to Flip,
     \begin{align*}
-      A[j + 1..k] \text{ is sorted} \land j = 0 \Rightarrow A[1..k] \text{ is sorted}
+      A[splitpoint] \gtrsim A[i], i < splitpoint \land A[splitpoint] \lesssim A[i], i > splitpoint\ \text{(I)}
     \end{align*}
-    Thus the invariant holds. \\
+    i.e. $A[splitpoint]$ is in it's correctly sorted position.\\
 
-    \textbf{Case 2:} $A[j] \lesssim A[j + 1]$ \\
-    We thus have,
+    \textbf{Case 1:} firstone == 0 \\
+    This implies that $\nexists A[i] \gtrsim A[lower], lower + 1 \leq i \leq upper$,
+    i.e. $A[lower]$ is the maximum value in $A[lower..upper]$.
+    In this case $splitpoint = upper$ and hence the call Flip($A$, lower, splitpoint = upper)
+    places $A[lower]$ at the end of the input list.  Since $A[lower]$ is the maximum
+    value, it is trivial to see that the above claim holds. \\
+
+    \textbf{Case 2:} firstone $>$ 0 \\
+    This implies that there are $upper - firstone$ values greater than $A[lower]$,
+    and $firstone - lower - 1$ values less than $A[lower]$.  Following the call
+    to Flip(A, lower, splitpoint = firstone - 1) we have $A[lower]$ in position
+    $firstone - 1$.  Therefore there are $upper - firstone$ values following
+    in the list, and $firstone - lower - 1$ values preceding in the list.
+    Thus $A[splitpoint]$ is in it's correctly sorted position. \\
+
+    It remains to show that the recursive calls produce correctly sorted lists.\\
+    Since $splitpoint \leq upper$,
     \begin{align*}
-      & A[j] \lesssim A[j + 1] \land A[j + 1..k] \text{ is sorted} & \\
-      & \Rightarrow A[j..k] \text{ is sorted} & \\
-      & A[1..k-1] \text{ is sorted} \land A[j..k] \text{ is sorted} \Rightarrow A[1..k] \text{ is sorted}
+      & splitpoint - lower - 1 \leq upper - lower - 1 &\\
+      & \Rightarrow splitpoint - lower - 1 \leq k & \text{(upper - lower = k + 1)}
     \end{align*}
-    Thus the invariant holds.\\
-    Therefore Following the n$th$ iteration we have $A[1..n]$ is sorted.\\
-    Hence, the Algorithm works correctly.
+    Therefore QuickFlipSort(A, lower, splitpoint - 1) will produce a correctly
+    sorted list \\$A[lower..splitpoint - 1]$ by the induction hypothesis (II).\\
+    Similarly since $splitpoint \geq lower$,
+    \begin{align*}
+      & upper - splitpoint \leq upper - lower & \\
+      & \Rightarrow upper - splitpoint - 1 \leq upper - lower - 1 &\\
+      & \Rightarrow upper - splitpoint - 1 \leq k & \text{upper - lower = k +1 }
+    \end{align*}
+    Therefore QuickFlipSort(A, splitpoint + 1, upper) will produce a correctly sorted
+    list \\$A[splitpoint+1..upper]$ (III). \\
+    Given (I), (II), and (III) we have $A[lower..upper]$ is sorted.\\
+    Thus, the Algorithm correctly sorts the input.
   \end{lemma}
 
-  \begin{lemma}{1.5} FlipSort runs in O($n^{2}lgn$) time \\ \\
-    \textbf{Key Operations:} Comparison of integers, calls to Flip \\
-    Given that the inner while loop will perform at most $i - 1$ comparisons,
-    and make at most $i - 1$ calls to Flip, each of which run in O($j + 1 - j$) = O(1) time,
-    we have,
+  \begin{lemma}{1.6} Algorithm QuickFlipSort performs at most O($n^{2}lgn$) operations \\
+
+    Much like traditional QuickSort, QuickFlipSort performs the most operations when
+    $A[lower]$ is the maximum element in the list.  In this case Flip(A, lower, splitpoint)
+    performs O(n) operations, and we reduce the size of the input by 1 for each
+    recursive call.  Given that FlipSort performs $\theta(nlgn)$ operations we have,
     \begin{align*}
-      & \sum_{i=2}^{n} 2(i-1) &\\
-      & = 2\sum_{i=2}^{n}i-1 &\\
-      & = 2(\sum_{i=2}^{n}i - \sum_{i=2}^{n}1) &\\
-      & = 2(\frac{n(n + 1)}{2} + 1 - (n - 1))&\\
-      & = 2(\frac{n^{2} + n}{2} + 1 - n  + 1)&\\
-      & = n^{2} - n + 4 & \\
-      & = O(n^{2}) & \\
-      & = O(n^{2}lgn) &
+      T(n) = \begin{cases}
+        T(n -1) + nlgn, & \text{if } n > 1 \\
+        0, & \text{otherwise}
+        \end{cases}
     \end{align*}
   \end{lemma}
+\end{question}
+
+\begin{question}{2} $T(n) = T(c_{1}n) + T(c_{2}n) + n$ where $ 0 < c_{1}, c_{2} < 1$ and $c_{1} + c_{2} < 1$
+  \leavevmode \\ \\
+  We guess that $T(n) = O(n)$. \\
+  (Induction Hypothesis) Suppose $T(n) \leq ck,\ \forall k < n$ (I). \\
+  (Induction Step) Since $0 < c_{1}, c_{2} < 1$, we have $c_{1}n < n \land c_{2}n < n,\ \forall n > 1$.
+  Therefore,
+  \begin{align*}
+    T(n) & = T(c_{1}n) + T(c_{2}n) + n & \\
+         & \leq cc_{1}n + cc_{2}n + n & \text{(I)} \\
+         & = n(cc_{1} + cc_{2}n + 1) & \\
+  \end{align*}
+  We are to deduce when $cc_{1}n + cc_{2}n + 1 \leq c$,
+  \begin{align*}
+    & cc_{1} n + cc_{2}n + 1 \leq c & \\
+    \Rightarrow & 1 \leq c - cc_{1} - cc_{2} &\\
+    \Rightarrow & 1 \leq c(1 - (c_{1} + c_{2})) &\\
+    \Rightarrow & \frac{1}{1 - (c_{1} + c_{2})} \leq c & (c_{1} + c_{2} < 1)\\
+  \end{align*}
+  Thus $T(n) \leq cn$ when $\frac{1}{1 - (c_{1} + c_{2})} \leq c$, $\forall n > 1$. \\ \\
+  (Induction Basis) Let $T(1) = a$, where $a$ is a constant.\\
+  Then, $T(1) = a \leq c$ for any $c \geq a$. \\ \\
+  Therefore $T(n) \leq cn$, $\forall n \geq 1$.\\
+  Hence, $T(n) = O(n)$.
 \end{question}
 
 \begin{question}{3}
