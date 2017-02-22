@@ -249,7 +249,7 @@
     \begin{align*}
       & upper - splitpoint \leq upper - lower & \\
       & \Rightarrow upper - splitpoint - 1 \leq upper - lower - 1 &\\
-      & \Rightarrow upper - splitpoint - 1 \leq k & \text{upper - lower = k +1 }
+      & \Rightarrow upper - splitpoint - 1 \leq k & \text{(upper - lower = k + 1)}
     \end{align*}
     Therefore QuickFlipSort(A, splitpoint + 1, upper) will produce a correctly sorted
     list \\$A[splitpoint+1..upper]$ (III). \\
@@ -265,10 +265,45 @@
     recursive call.  Given that FlipSort performs $\theta(nlgn)$ operations we have,
     \begin{align*}
       T(n) = \begin{cases}
-        T(n -1) + nlgn, & \text{if } n > 1 \\
+        T(n -1) + n + nlgn, & \text{if } n > 1 \\
         0, & \text{otherwise}
         \end{cases}
     \end{align*}
+    We guess that T(n) = O($n^{2}lgn$).\\
+    (Induction Hypothesis) Assume $T(k) \leq ck^{2}lgk,\ \forall k < n$\\
+    (Induction Step) Since $n-1 < n$ (I),
+    \begin{align*}
+      T(n) & = T(n - 1) + n + nlgn & \\
+           & \leq c(n-1)^{2}lg(n-1) + n + nlgn & \text{(I)} \\
+           & = (cn^{2} -2cn + c)lg(n-1) + n + nlgn & \\
+           & = cn^{2}lg(n-1) - 2cnlg(n-1) + clg(n-1) + n + nlgn & \\
+           & = cn^{2}lg(n-1) - 3(\frac{2}{3}cnlg(n-1)) + clg(n-1) + n + nlgn & \\
+           & = cn^{2}lg(n-1) - (\frac{2}{3}cnlg(n-1) - clg(n-1)) - (\frac{2}{3}cnlg(n-1) - n) - (\frac{2}{3}cnlg(n-1) - nlgn) & \\
+    \end{align*}
+
+    \begin{align*}
+     \frac{2}{3}cnlg(n-1) \geq clg(n-1) \Rightarrow n \geq 3
+    \end{align*}
+
+    \begin{align*}
+      \frac{2}{3}cnlg(n-1) \geq n \Rightarrow n \geq 3, c \geq \frac{3}{2}
+    \end{align*}
+
+    \begin{align*}
+      \frac{2}{3}cnlg(n-1) \geq nlgn \Rightarrow c > 3, n \geq 3
+    \end{align*}
+
+    Therefore,
+    \begin{align*}
+      & cn^{2}lg(n-1) - (\frac{2}{3}cnlg(n-1) - clg(n-1)) - (\frac{2}{3}cnlg(n-1) - n) - (\frac{2}{3}cnlg(n-1) - nlgn) &\\
+      & \leq cn^{2}lg(n-1) & \\
+      & \leq cn^{2}lg(n) &
+    \end{align*}
+    For $n \geq 3, c > max\{\frac{3}{2}, 3\}) = 3$.
+
+    (Induction Basis) Let $c' = max\{\frac{T(2)}{4}, 3\}$.\\
+    Then $T(n) \leq c'n^{2}lgn,\ \forall n \geq 2$. \\
+    Hence, $T(n) = O(n^{2}lgn)$.
   \end{lemma}
 \end{question}
 
