@@ -316,11 +316,11 @@
   \begin{align*}
     T(n) & = T(c_{1}n) + T(c_{2}n) + n & \\
          & \leq cc_{1}n + cc_{2}n + n & \text{(I)} \\
-         & = n(cc_{1} + cc_{2}n + 1) & \\
+         & = n(cc_{1} + cc_{2} + 1) & \\
   \end{align*}
-  We are to deduce when $cc_{1}n + cc_{2}n + 1 \leq c$,
+  We are to deduce when $cc_{1} + cc_{2} + 1 \leq c$,
   \begin{align*}
-    & cc_{1} n + cc_{2}n + 1 \leq c & \\
+    & cc_{1} + cc_{2} + 1 \leq c & \\
     \Rightarrow & 1 \leq c - cc_{1} - cc_{2} &\\
     \Rightarrow & 1 \leq c(1 - (c_{1} + c_{2})) &\\
     \Rightarrow & \frac{1}{1 - (c_{1} + c_{2})} \leq c & (c_{1} + c_{2} < 1)\\
