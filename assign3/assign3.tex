@@ -1,0 +1,158 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[none]{hyphenat}
+\usepackage{mathtools}
+\usepackage{verbatim}
+\usepackage[ruled]{algorithm2e}
+\setlength{\parindent}{0pt}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+
+\SetKwInput{KwInput}{Input}
+\SetKwInput{KwOutput}{Output}
+\SetKwInput{KwLet}{Let}
+
+\begin{document}
+
+\title{Assignment 3}%replace X with the appropriate number
+\author{Quinn Perfetto, 104026025\\ %replace with your name
+ 60-454 Design and Analysis of Algorithms} %if necessary, replace with your course title
+
+\maketitle
+
+\begin{question}{1}
+  \leavevmode \\ \\
+  \textbf{Idea:} Sum consecutive elements of the input array until the sum
+  exceeds $M$.  Once this happens, add the offending index to the subdivision
+  and reset the sum. \\
+  \begin{algorithm}[H]
+    \caption{Subdivide(W, M)}
+    \KwInput{$W[1..n], 0 \leq W[i] \leq M, 1 \leq i \leq n$}
+    \KwOutput{$S[1..k]$ such that $S$ is an optimal subdivision of $W$}
+    \BlankLine
+
+    \Begin{
+      sum := 0\;
+      S := $[\ ]$\;
+      \For{i $\leftarrow$ 1 \KwTo $n$} {
+        sum = sum + $W[i]$\;
+        \If{sum $>$ M} {
+          append(S, i - 1)\;
+          sum := $W[i]$\;
+        }
+      }
+    }
+  \end{algorithm}
+
+  \begin{lemma}{1.1} Algorithm Subdivide produces a valid subdivision of the input array $W$
+    \leavevmode \\ \\
+    We shall show this by inductively proving that after the m$th$ iteration
+    of the for loop,
+    \begin{align*}
+      S \text{ is a valid subdivision of } W[1..m] \land sum = \sum_{j=S_{last} + 1}^{m} W[j]
+    \end{align*}
+
+    \textbf{Note:} We take $S_{last}$ to be the last element in $S$ if it exists,
+    and 0 otherwise. \\
+
+    \begin{proof}
+      (Induction Basis) We first note that sum is initialized to 0.  After
+      control reaches line 4 for the first time we have,
+      \begin{align*}
+        sum = sum + W[1] \Rightarrow sum = W[1] = \sum_{j=1}^{1} W[j]
+      \end{align*}
+      Note that $S$ was initialized to $[\ ]$.  Since $sum = W[1] \leq M$, control
+      will not enter the if statement on line 5, thus $S$ will remain empty and
+      $S_{last} = 0$.  Further since $W[1..m=1]$ is a single element list such that
+      $W[1] \leq M$, $S = [\ ]$ is vacuously a valid subdivision of $W$. \\
+
+      (Induction Hypothesis) Assume that after $k$ iterations of the for loop,
+      \begin{align*}
+        S \text{ is a valid subdivision of } W[1..k] \land sum = \sum_{j = S_{last} + 1}^{k} W[j]
+      \end{align*}
+
+      (Induction Step)
+      \textbf{Case 1:} $sum > M$ \\ \\
+      By the induction assumption $S$ is a valid subdivision of $W[1..k]$, by the defintion of
+      a valid subdivision we thus have,
+      \begin{align*}
+        & \sum_{j = S_{last} + 1}^{k} W[j] \leq M & \text{(I)}
+      \end{align*}
+
+      After appending $i - 1 = k$ to $S$, $S_{last} = k$.  Therefore (I) is equivalent to,
+      \begin{align*}
+        \sum_{j = S_{last - 1} + 1}^{S_{last}} W[j] \leq M
+      \end{align*}
+
+      Further since $\sum_{j = S_{last} + 1}^{k+1} W[j] = W[k+1] \leq M$ we have
+      $S$ is a valid subdivision of \\
+      $W[1..k+1]$. \\ \\
+      After assigning $sum = W[k + 1]$ we also have $sum = \sum_{S_{last} +1}^{k+1} W[j]$. \\
+
+      \textbf{Case 2:} $sum \leq M$ \\ \\
+      Since by our inductive assumption $S$ is a valid subdivision of $W[1..k]$ and,
+      \begin{align*}
+        sum & = \sum_{j=S_{last} + 1}^{k} W[j] + W[k+1] & \\
+            & = \sum_{j=S_{last} + 1}^{k+1} W[j] & \\
+            & \leq M &
+      \end{align*}
+      We have S is a valid subdivision of $W[1..k+1]$.
+    \end{proof}
+
+    Therefore by Lemma 1.1, after $n$ iterations $S$ will be a valid parition of
+    $W[1..n]$. \\
+    Hence the algorithm produces a valid subdivision of $W$.
+  \end{lemma}
+\end{question}
+
+\begin{question}{2 (b)}
+  \leavevmode \\ \\
+  \begin{algorithm}[H]
+    \caption{LeastDifferenceMatching(H, S)}
+    \KwInput{$ H=\{h_{j}\ |\ 1 \leq j \leq n\}, S = \{S_{j}\ |\ 1 \leq j \leq m\},\ n \leq m$}
+    \KwOutput{TODO}
+    \BlankLine
+
+    \Begin{
+      \For{i $\leftarrow$ 1 \KwTo $m$} {
+        $D[n + 1,\ i]$ = 0\;
+      }
+      \For{i $\leftarrow$ 1 \KwTo $n - 1$} {
+        $D[i,\ m]$ = $\infty$\;
+      }
+
+      \BlankLine
+      Sort(H)\;
+      Sort(S)\;
+      $D[n, m] = \abs{H[n] - S[m]}$ \;
+
+      \For{i $\leftarrow$ n \KwTo 1} {
+        \For{j $\leftarrow$ m - 1 \KwTo 1} {
+          $D[i, j]$ = min($\abs{H[i] - S[j]} + D[i+1,\ j+1],\ D[i,\ j+1]$)\;
+        }
+      }
+    }
+  \end{algorithm}
+\end{question}
+
+\end{document}
