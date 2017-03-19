@@ -40,7 +40,7 @@
 
 \maketitle
 
-\begin{question}{1}
+\begin{question}{1 (a)}
   \leavevmode \\ \\
   \textbf{Idea:} Sum consecutive elements of the input array until the sum
   exceeds $M$.  Once this happens, add the offending index to the subdivision
@@ -123,14 +123,64 @@
     $W[1..n]$. \\
     Hence the algorithm produces a valid subdivision of $W$.
   \end{lemma}
+
+  \pagebreak
+  \begin{lemma}{1.2} Algorithm Subdivide produces an optimal subdivision of the
+                     input array in terms of size
+    \begin{proof} (Contradiction)
+      Suppose to the contrary that Algorithm Subdivide does not produce an optimal
+      subdivision of the input array. Let $S$ be the subdivision produced by
+      Algorithm Subdivide for some input array $W$, and let $S'$ be a valid
+      subdivision of $W$ such that $\abs{S'} < \abs{S}$ (i.e. $S'$ is more
+      optimal than $S$).  Since $\abs{S'} < \abs{S}$, $\exists i_{j}, i_{j+1} \in S$
+      and $\exists i_{x}, i_{x+1} \in S'$ such that $i_{x} \leq i_{j} < i_{j+1} < i_{x+1}$ (I).
+      Such indices must exist for if they didn't the paritions would be equal.
+      It can be seen that extending any subdivision produced by Algorithm Subdivide
+      would result in an invalid subdivision as,
+      \begin{align*}
+        \exists i_{k}, \sum_{j=i_{k}+1}^{i_{k+1}} W[j] > M
+      \end{align*}
+      (I) implies that $S'$ contains a subdivision that is an extension of
+      a subdivision of $S$, and thus has a sum larger than $M$.  Therefore $S'$
+      is an invalid subdivision.  Thus $S$ must be optimal.
+    \end{proof}
+  \end{lemma}
+
+  \begin{lemma}{1.3} Algorithm Subdivide runs in O(n) time
+    \leavevmode \\ \\
+    The for loop iterates over each of the $n$ elements of $W$, and performs
+    a constant amount of work in each iteration.  We therefore have T(n) = O(cn) = O(n).
+  \end{lemma}
+\end{question}
+
+\begin{question}{1 (b)}
+  The greedy algorithm presented above will not produce an optimal subdivision
+  if $W$ contains negative elements.  If $W$ contains negative numbers extending
+  a subdivision does not necessarily increase it's sum, and thus greedily ending
+  subdivisions does not guarantee optimality. \\
+
+  \textbf{Example:}
+  W = $[1, 2, 10, -9]$, $M = 10$ \\
+  $S_{greedy}$ = $[2]$, $S_{optimal}$ = $[]$ \\
+\end{question}
+
+\begin{question}{2 (a)}
 \end{question}
 
 \begin{question}{2 (b)}
   \leavevmode \\ \\
+  \textbf{Idea:} Let $D[i, j]$ represent the least difference matching between
+  $H[i..n]$ and $S[j..m]$.  For any $i,\ j$ two options arise:
+  \begin{itemize}
+    \item Pair $H_{i}$ with $S_{j}$, in which case $D[i,\ j] = \abs{H_{i} - S_{j}} + D[i + 1, j + 1]$
+    \item Don't pair $H_{i}$ with $S_{j}$, in which case $D[i,\ j] = D[i, j + 1]$
+  \end{itemize}
+  The optimal result is thus the minimum of the two options.
+
   \begin{algorithm}[H]
     \caption{LeastDifferenceMatching(H, S)}
     \KwInput{$ H=\{h_{j}\ |\ 1 \leq j \leq n\}, S = \{S_{j}\ |\ 1 \leq j \leq m\},\ n \leq m$}
-    \KwOutput{TODO}
+    \KwOutput{$min(\sum_{i=0}^{n}\abs{H[i] - S[i]})$}
     \BlankLine
 
     \Begin{
@@ -151,6 +201,7 @@
           $D[i, j]$ = min($\abs{H[i] - S[j]} + D[i+1,\ j+1],\ D[i,\ j+1]$)\;
         }
       }
+      \KwRet{$D[1, 1]$}
     }
   \end{algorithm}
 \end{question}
