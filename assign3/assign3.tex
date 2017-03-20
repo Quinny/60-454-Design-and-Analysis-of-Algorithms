@@ -134,7 +134,7 @@
       subdivision of $W$ such that $\abs{S'} < \abs{S}$ (i.e. $S'$ is more
       optimal than $S$).  Since $\abs{S'} < \abs{S}$, $\exists i_{j}, i_{j+1} \in S$
       and $\exists i_{x}, i_{x+1} \in S'$ such that $i_{x} \leq i_{j} < i_{j+1} < i_{x+1}$ (I).
-      Such indices must exist for if they didn't the paritions would be equal.
+      Such indices must exist for if they didn't the solutions would be equal in size.
       It can be seen that extending any subdivision produced by Algorithm Subdivide
       would result in an invalid subdivision as,
       \begin{align*}
@@ -149,13 +149,14 @@
   \begin{lemma}{1.3} Algorithm Subdivide runs in O(n) time
     \leavevmode \\ \\
     The for loop iterates over each of the $n$ elements of $W$, and performs
-    a constant amount of work in each iteration.  We therefore have T(n) = O(cn) = O(n).
+    two operations for each iteration (i.e. one addition and one comparison). \\
+    We therefore have T(n) = O(2n) = O(n).
   \end{lemma}
 \end{question}
 
 \begin{question}{1 (b)}
   The greedy algorithm presented above will not produce an optimal subdivision
-  if $W$ contains negative elements.  If $W$ contains negative numbers extending
+  if $W$ contains negative elements.  If $W$ contains negative elements, extending
   a subdivision does not necessarily increase it's sum, and thus greedily ending
   subdivisions does not guarantee optimality. \\
 
@@ -169,16 +170,25 @@
 
 \begin{question}{2 (b)}
   \leavevmode \\ \\
-  \textbf{Idea:} Let $D[i, j]$ represent the least difference matching between
+  \textbf{Idea:} Let $D[i, j]$ represent the least difference mapping between
   $H[i..n]$ and $S[j..m]$.  For any $i,\ j$ two options arise:
   \begin{itemize}
     \item Pair $H_{i}$ with $S_{j}$, in which case $D[i,\ j] = \abs{H_{i} - S_{j}} + D[i + 1, j + 1]$
-    \item Don't pair $H_{i}$ with $S_{j}$, in which case $D[i,\ j] = D[i, j + 1]$
+    \item Don't pair $H_{i}$ with $S_{j}$, in which case $D[i,\ j] = D[i,\ j + 1]$
   \end{itemize}
   The optimal result is thus the minimum of the two options.
+  
+  \pagebreak
+
+  \textbf{Base cases:}
+  \begin{itemize}
+    \item $D[n, m]$ = the least difference mapping between $H[n..n]$ and $S[m..m]$ = $\abs{H_{n} - S_{m}}$
+    \item $D[i,\ m] = \infty$, $1 \leq i \leq n - 1$ since each value in $H$ must map to a distinct value in $S$
+    \item $D[n + 1, i] = 0$, $1 \leq i \leq m$ since $H[n+1..n]$ is empty
+  \end{itemize}
 
   \begin{algorithm}[H]
-    \caption{LeastDifferenceMatching(H, S)}
+    \caption{LeastDifferenceMapping(H, S)}
     \KwInput{$ H=\{h_{j}\ |\ 1 \leq j \leq n\}, S = \{S_{j}\ |\ 1 \leq j \leq m\},\ n \leq m$}
     \KwOutput{$min(\sum_{i=0}^{n}\abs{H[i] - S[i]})$}
     \BlankLine
@@ -192,8 +202,8 @@
       }
 
       \BlankLine
-      Sort(H)\;
-      Sort(S)\;
+      SortAscending(H)\;
+      SortAscending(S)\;
       $D[n, m] = \abs{H[n] - S[m]}$ \;
 
       \For{i $\leftarrow$ n \KwTo 1} {
@@ -204,6 +214,71 @@
       \KwRet{$D[1, 1]$}
     }
   \end{algorithm}
+
+  \begin{lemma}{2.1} Algorithm LeastDifferenceMapping correctly produces the mapping from $H$ to $S$ such that $\sum_{j=1}^{n} \abs{h_{j} - s{j}}$ is minimized
+    \leavevmode \\ \\
+    (The optimal substructure) \\
+    Consider a one-to-one mapping from two sequences sorted in ascending order\\
+    $h_{i}h_{i+1}...h_{n}$ to $s_{j}s_{j+1}...s_{m}$. \\ \\
+    We define the least difference mapping as a mapping that minimizes $\sum_{x=i}^{n} \abs{h_{x} - s_{x}}$. \\ \\
+    Let $D[i,\ j] = $ the summation of the differences in the least difference mapping of $h_{i}h_{i+1}...h_{n}$ to $s_{j}s_{j+1}...s_{m}$. \\ \\
+    In any least difference mapping $h_{i}h_{i+1}...h_{n}$ to $s_{j}s_{j+1}...s_{m}$,
+    \begin{enumerate}
+      \item If $h_{i}$ is mapped to $s_{j}$, then $h_{i+1}...h_{n}$ is mapped to
+        $s_{j+1}...s_{m}$ and must be a least difference mapping.  Otherwise,
+        a more optimal mapping from $h_{i+1}...h_{n}$ to $s_{j+1}...s_{m}$ combined
+        with the mapping from $h_{i}$ to $s_{j}$ would produce a mapping with a
+        smaller difference, a contradiction! \\ \\
+        It follows that $D[i, j] = \abs{h_{i} - s_{j}} + D[i + 1,\ j + 1]$.
+
+      \item If $h_{i}$ is not mapped to $s_{j}$, then $h_{i}...h_{n}$ is mapped
+        to $s_{j+1}...s_{m}$ and must must be a least difference mapping.  Since
+        the sequences are sorted, by the property proven in 2 (a) any other
+        mapping could be swapped to decrease the sum, thus it must be a minimum. \\ \\
+        It follows that $D[i, j] = D[i, j + 1]$.
+    \end{enumerate}
+
+    We thus obtain the following recurrence:
+    \begin{align*}
+      D[i, j] = min\{\abs{h_{i} - s_{j}} + & D[i + 1, j + 1], & \\
+                                           & D[i, j + 1]\}
+    \end{align*}
+
+    Clearly,
+    \begin{align*}
+      & D[n, m] = \abs{h_{n} - s_{m}} & \text{(Only one possible mapping)} \\
+      & D[n + 1, i] = 0 & \text{(H is empty)} \\
+      & D[i, m] = \infty & \text{(Not enough elements in S for a distinct mapping)}
+    \end{align*}
+  \end{lemma}
+
+  \begin{lemma}{2.2} Algorithm LeastDifferenceMapping runs in O($mlgm$ + mn) time
+    \leavevmode \\ \\
+    \textbf{Initialization:} Initializing the first and second base cases perform
+    $m$ and $n - 1$ operations respectively. \\
+
+    \textbf{Sorting:} Sorting $H$ and $S$ requires at most $nlgn$ and $mlgm$ operations
+    respectively. \\
+
+    \textbf{Filling the table:} The outer loop performs $n$ iterations, while the
+    inner loop performs $m-1$ iterations.  Each of the $m-1$ iterations performs
+    a constant amount of work, we therefore have $n(m-1) = nm - n = O(mn)$ total operations. \\
+
+    \textbf{Total:} In summation,
+    \begin{align*}
+      T(n, m) & = O(m) + O(n - 1) + O(nlgn) + O(mlgm) + O(mn) & \\
+           & = O(mlgm) + O(mn) & \text{($n \leq m$)} \\
+           & = O(mlgm + mn) & \\
+    \end{align*}
+  \end{lemma}
+\end{question}
+
+\begin{question}{3 (a)}
+  \leavevmode
+  \begin{proof}
+    Let G = (V, E) be a connected simple graph such that $\exists j, 1 \leq j \leq d_{1} + 1,\ \{v_{1}, v_{j}\} \notin E$. \\
+    Let $v_{j} \in V$, $1\leq j \leq d_{1} + 1,\ \{v_{1}, v_{j}\} \notin E$. \\
+  \end{proof}
 \end{question}
 
 \end{document}
