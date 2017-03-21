@@ -273,11 +273,51 @@
   \end{lemma}
 \end{question}
 
+\pagebreak
+
 \begin{question}{3 (a)}
   \leavevmode
   \begin{proof}
-    Let G = (V, E) be a connected simple graph such that $\exists j, 1 \leq j \leq d_{1} + 1,\ \{v_{1}, v_{j}\} \notin E$. \\
-    Let $v_{j} \in V$, $1\leq j \leq d_{1} + 1,\ \{v_{1}, v_{j}\} \notin E$. \\
+    Let G = (V, E) be a connected simple graph such that $\exists j, 1 \leq j \leq d_{1} + 1,\ \{v_{1}, v_{j}\} \notin E$. \\ \\
+    Let $v_{j} \in V, \{v_{1}, v_{j}\} \notin E, 1 \leq j \leq d_{1} + 1$. \\
+    Since $v_{1}$ is adjacent to $d_{1}$ verticies, and $\abs{\{v_{i}\ |\ 2 \leq i \leq d_{1} + 1\} - \{v_{j}\}} = d_{1} - 1$
+    we have,
+    \begin{align*}
+      \exists v_{\ell} \in V,\ d_{1} + 1 < \ell \leq n, \{v_{1}, v_{\ell}\} \in E
+    \end{align*}
+
+    By transitivity $j < \ell$, therefore $d_{j} \geq d_{\ell}$.  Further since
+    $v_{1}$ is adjacent to $v_{\ell}$ and not adjacent to $v_{j}$,
+    there must exist some vertex, namely $u (\neq v_{j}, v_{l})$, that is adjacent to $v_{j}$ and not
+    $v_{\ell}$. Hence we have,
+    \begin{align*}
+      \{v_{1}, v_{j}\} \notin E \land \{u, v_{\ell}\} \notin E \land
+      \{v_{1}, v_{\ell}\} \in E \land \{u, v_{j}\} \in E
+    \end{align*}
+  \end{proof}
+\end{question}
+
+\begin{question}{3 (b)}
+  \leavevmode 
+  \begin{proof}
+    We must construct a graph $G'$ with the same degree sequence as $G$, but
+    $\{v_{1}, v_{j}\} \in E'$. \\
+
+    $\forall v_{j} \in V,\ \{v_{1}, v_{j}\} \notin E,\ 2 \leq j \leq d_{1} + 1$
+    we assume the existance of the corresponding $v_{\ell}$, and $u$ in $G$ by the previously
+    proven theorem in Question 3 a. \\
+
+    $E'$ can then be constructed by performing the following transformations to $E$:
+    \begin{itemize}
+      \item Connect $v_{1}$ to $v_{j}$
+      \item Connect $u$ to $v_{\ell}$
+      \item Disconnect $v_{1}$ from $v_{\ell}$ (Note that this restores each
+        to their original degrees)
+      \item Disconnect $v_{j}$ from $u$ (Note that this restores each to their
+        original degrees)
+    \end{itemize}
+    Thus $G'$ contains the same degree sequence as $G$, but contains an edge
+    from $v_{1}$ to $v_{j}$.
   \end{proof}
 \end{question}
 
