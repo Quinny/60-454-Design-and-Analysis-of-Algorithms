@@ -85,7 +85,7 @@
       Note that $S$ was initialized to $[\ ]$.  Since $sum = W[1] \leq M$, control
       will not enter the if statement on line 5, thus $S$ will remain empty and
       $S_{last} = 0$.  Further since $W[1..m=1]$ is a single element list such that
-      $W[1] \leq M$, $S = [\ ]$ is vacuously a valid subdivision of $W$. \\
+      $W[1] \leq M$, $S = [\ ]$ is vacuously a valid subdivision of $W[1..m]$. \\
 
       (Induction Hypothesis) Assume that after $k$ iterations of the for loop,
       \begin{align*}
@@ -94,7 +94,7 @@
 
       (Induction Step)
       \textbf{Case 1:} $sum > M$ \\ \\
-      By the induction assumption $S$ is a valid subdivision of $W[1..k]$, by the defintion of
+      By the induction assumption $S$ is a valid subdivision of $W[1..k]$.  By the defintion of
       a valid subdivision we thus have,
       \begin{align*}
         & \sum_{j = S_{last} + 1}^{k} W[j] \leq M & \text{(I)}
@@ -120,7 +120,7 @@
       We have S is a valid subdivision of $W[1..k+1]$.
     \end{proof}
 
-    Therefore by Lemma 1.1, after $n$ iterations $S$ will be a valid parition of
+    Therefore by Lemma 1.1, after $n$ iterations $S$ will be a valid subdivision of
     $W[1..n]$. \\
     Hence the algorithm produces a valid subdivision of $W$.
   \end{lemma}
@@ -136,14 +136,14 @@
       optimal than $S$).  Since $\abs{S'} < \abs{S}$, $\exists i_{j}, i_{j+1} \in S$
       and $\exists i_{x}, i_{x+1} \in S'$ such that $i_{x} \leq i_{j} < i_{j+1} < i_{x+1}$ (I).
       Such indices must exist for if they didn't the solutions would be equal in size.
-      It can be seen that extending any subdivision produced by Algorithm Subdivide
-      would result in an invalid subdivision as,
+      Since $W[i] > 0,\ 1 \leq i \leq n$, it can be seen that extending any subdivision
+      produced by Algorithm Subdivide would result in an invalid subdivision as,
       \begin{align*}
         \exists i_{k}, \sum_{j=i_{k}+1}^{i_{k+1}} W[j] > M
       \end{align*}
       (I) implies that $S'$ contains a subdivision that is an extension of
-      a subdivision of $S$, and thus has a sum larger than $M$.  Therefore $S'$
-      is an invalid subdivision.  Thus $S$ must be optimal.
+      a subdivision of $S$, and thus must have a sum larger than $M$.  Therefore $S'$
+      is an invalid subdivision.  Hence $S$ must be optimal.
     \end{proof}
   \end{lemma}
 
@@ -180,7 +180,8 @@
     \end{align*}
     I.e.
     \begin{align*}
-      \abs{h_{j} - s_{j}} + \abs{h_{i} - s_{i}} = \abs{h_{j} - s_{i}} + \abs{h_{i} - s_{j}}
+      h_{j} - s_{j} + h_{i} - s_{i} = h_{j} - s_{i} + h_{i} - s_{j} & \Rightarrow \abs{h_{j} - s_{i}} + \abs{h_{i} - s_{j}} = \abs{h_{j} - s_{i}} + \abs{h_{i} - s_{j}} & \\
+                                                                    & \Rightarrow \abs{h_{j} - s_{i}} + \abs{h_{i} - s_{j}} \leq \abs{h_{j} - s_{i}} + \abs{h_{i} - s_{j}} &
     \end{align*}
 
     \textbf{Case 2:} $s_{i} \leq h_{i} \leq s_{j} \leq h_{j}$
@@ -194,7 +195,10 @@
     \end{align*}
     I.e.,
     \begin{align*}
-      & -(s_{j} - h_{i}) \leq s_{j} - h_{i} & \text{($s_{j} \geq h_{i} \Rightarrow s_{j} - h_{i} \geq 0$)}
+      s_{j} \geq h_{i} & \Rightarrow s_{j} - h_{i} \geq 0 & \\
+                       & \Rightarrow -(s_{j} - h_{i}) \leq s_{j} - h_{i} & \\
+                       & \Rightarrow h_{j} - s_{j} - s_{j} - h_{i} \leq h_{j} - s_{i} + s_{j} - h_{i} &\\
+                       & \Rightarrow \abs{h_{j} - s_{j}} + \abs{h_{i} - s_{i}} \leq \abs{h_{j} - s_{i}} + \abs{h_{i} - s_{j}} & \\
     \end{align*}
 
     \textbf{Case 3:} $s_{i} \leq h_{i} < h_{j} \leq s_{j}$
@@ -208,12 +212,16 @@
     \end{align*}
     I.e.,
     \begin{align*}
-      & -(h_{j} - h_{i}) \leq h_{j} - h_{i} & \text{($h_{j} \geq h_{i} \Rightarrow h_{j} - h_{i} \geq 0$)}
+      h_{j} \geq h_{i} & \Rightarrow h_{j} - h_{i} \geq 0 & \\
+                       & \Rightarrow -(h_{j} - h_{i}) \leq h_{j} - h_{i} & \\
+                       & \Rightarrow s_{j} - h_{j} + h_{i} - s_{i} \leq h_{j} - s_{i} + s_{j} - h_{i} &\\
+                       & \Rightarrow \abs{h_{j} - s_{j}} + \abs{h_{i} - s_{i}} \leq \abs{h_{j} - s_{i}} + \abs{h_{i} - s_{j}} & \\
     \end{align*}
 
-    The remaining cases can be expressed by simply swapping $h_{i}$ with
-    $s_{i}$ and $s_{j}$ with $h_{j}$. \\
-    Therefore the statement holds true for all cases.
+    The remaining cases can be expressed by swapping $h_{i}$ with
+    $s_{i}$ and $s_{j}$ with $h_{j}$ and are thus omitted.\\ 
+    Therefore the statement holds true for all cases.\\
+    Hence $s_{i} < s_{j} \land h_{i} < h_{j} \Rightarrow \abs{h_{j} - s_{j}} + \abs{h_{i} - s_{i}} \leq \abs{h_{j} - s_{i}} + \abs{h_{i} - s_{j}}$ 
   \end{proof}
 \end{question}
 
@@ -268,7 +276,8 @@
     Consider a one-to-one mapping from two sequences sorted in ascending order\\
     $h_{i}h_{i+1}...h_{n}$ to $s_{j}s_{j+1}...s_{m}$. \\ \\
     We define the least difference mapping as a mapping that minimizes $\sum_{x=i}^{n} \abs{h_{x} - s_{x}}$. \\ \\
-    Let $D[i,\ j] = $ the summation of the differences in the least difference mapping of $h_{i}h_{i+1}...h_{n}$ to $s_{j}s_{j+1}...s_{m}$. \\ \\
+    Let $D[i,\ j] = $ the summation of the differences in the least difference mapping of
+    $h_{i}h_{i+1}...h_{n}$ to $s_{j}s_{j+1}...s_{m}$. \\ \\
     In any least difference mapping $h_{i}h_{i+1}...h_{n}$ to $s_{j}s_{j+1}...s_{m}$,
     \begin{enumerate}
       \item If $h_{i}$ is mapped to $s_{j}$, then $h_{i+1}...h_{n}$ is mapped to
@@ -280,7 +289,7 @@
 
       \item If $h_{i}$ is not mapped to $s_{j}$, then $h_{i}...h_{n}$ is mapped
         to $s_{j+1}...s_{m}$ and must must be a least difference mapping.  Since
-        the sequences are sorted, by the property proven in 2 (a) any other
+        the sequences are sorted, the property proven in 2 (a) shows that any other
         mapping could be swapped to decrease the sum, thus it must be a minimum. \\ \\
         It follows that $D[i, j] = D[i, j + 1]$.
     \end{enumerate}
@@ -320,11 +329,15 @@
   \end{lemma}
 \end{question}
 
+\pagebreak
+
 \begin{question}{3 (a)}
   \leavevmode
   \begin{proof}
     Let G = (V, E) be a connected simple graph such that $\exists j, 1 \leq j \leq d_{1} + 1,\ \{v_{1}, v_{j}\} \notin E$. \\ \\
-    Let $v_{j} \in V, \{v_{1}, v_{j}\} \notin E, 1 \leq j \leq d_{1} + 1$. \\
+    We note that since G is a simple graph $\{v_{1}, v_{1}\} \notin E$, therefore the above statement can be re-expressed
+    as $\exists j,\ 2 \leq j \leq d_{1} + 1,\ \{v_{1}, v_{j}\} \notin E$. \\ \\
+    Let $v_{j} \in V, \{v_{1}, v_{j}\} \notin E, 2 \leq j \leq d_{1} + 1$. \\
     Since $v_{1}$ is adjacent to $d_{1}$ verticies, and $\abs{\{v_{i}\ |\ 2 \leq i \leq d_{1} + 1\} - \{v_{j}\}} = d_{1} - 1$,
     $v_{1}$ must be adjacent to a vertex outside of this range.  That is,
     \begin{align*}
@@ -333,11 +346,16 @@
 
     By transitivity $j < \ell$, therefore $d_{j} \geq d_{\ell}$.  Further since
     $v_{1}$ is adjacent to $v_{\ell}$ and not adjacent to $v_{j}$,
-    there must exist some vertex, namely $u (\neq v_{j}, v_{l})$, that is adjacent to $v_{j}$ and not
-    $v_{\ell}$. Hence we have,
+    there must exist some vertex, namely $u (\neq v_{j}, v_{\ell})$,
+    that is adjacent to $v_{j}$ and not $v_{\ell}$. Hence we have,
     \begin{align*}
       \{v_{1}, v_{j}\} \notin E \land \{u, v_{\ell}\} \notin E \land
       \{v_{1}, v_{\ell}\} \in E \land \{u, v_{j}\} \in E
+    \end{align*}
+
+    Such that,
+    \begin{align*}
+      2 \leq j \leq d_{1}+1 \land 1 \leq j \leq d_{1} + 1 < \ell \leq n \land u \in V - \{v_{\ell}, v_{j}\}
     \end{align*}
   \end{proof}
 \end{question}
@@ -375,11 +393,11 @@
   removing $v_{1}$ from the graph, we reduce the degree of the following $d_{1}$
   vertices by $1$.  This process can be continued until:
   \begin{enumerate}
-      \item We are left with a single vertex of degree 0.  In this case we have
-        a valid graph.
-      \item The degree of the highest vertex is greater than $\abs{V} - 1$.
-        In this case the graph is invalid, as the degree of a single vertex
-        cannot be more than $\abs{V} - 1$ in a simple graph.
+      \item We are left with a null graph.  I.e. decomposing the graph one vertex
+        at a time leads to an empty graph.
+      \item $d_{1} > \abs{V} - 1$ or $d_{1} < 0$.  In this case the graph is
+        invalid, as the degree of a single vertex in a simple graph must be
+        $\in [0, n-1]$.
   \end{enumerate}
   The degree sequence shall be stored in a \textit{linked list} to allow for
   constant time removal and reordering of the elements.
@@ -406,13 +424,14 @@
 
         \tcp{Remove the first element and return it}
         $d_{1}$ = pop\_first($D_{sorted}$)\;
+        \If {$d_{1} > \abs{D_{sorted}}$ or $d_{1} < 0$} {
+          \KwRet{false}\;
+        }
+
         \BlankLine
         \tcp{Pointer to the head of the linked list}
         ptr := head($D_{sorted}$)\;
         \For{i $\leftarrow$ 1 \KwTo $d_{1}$} {
-          \If {ptr == $null$} {
-            \KwRet{false}\;
-          }
           ptr.value = ptr.value - 1\;
           ptr = ptr.next\;
         }
@@ -434,18 +453,77 @@
     We shall show correctness by induction on the input size $n$. \\
 
     (Induction Basis) $n = 0$ The null graph is a graph with an empty degree sequence.
-    Therefore there does exist a graph when $n = $.  The algorithm will clearly
+    Therefore there does exist a graph when $n = 0$.  The algorithm will clearly
     return true as $D_{sorted}$ will be empty upon the initial call.  Therefore
     the algorithm works correctly. \\
 
-    \pagebreak
-
-    (Induction Hypothesis) Suppose $\forall k < n (n > 0)$, the algorithm correctly
+    (Induction Hypothesis) Suppose $\forall k < n\ (n > 0)$, the algorithm correctly
     determines if there exists a graph with the given degree sequence of size $k$. \\
 
-    (Induction Step) Let $D'$ be a degree sequence of size $n$ sorted in descending order.  Following
-    the call to pop\_first on Line 4, $d_{1}$ contains the maximum value in $D'$ (since it is assumed to
-    be sorted in descending order), and $\abs{D'} = n - 1$.
+    (Induction Step) Let $D'$ be a degree sequence of size $n$ sorted in descending order.
+    By the theorem proven in Question 3 (b), there must exist a graph with the same
+    degree sequence such that
+    $\forall v_{i}, \{v_{1}, v{i}\} \in E,\ 2 \leq i \leq d_{1} + 1$.
+    Following the call to pop\_first on Line 4, $d_{1}$ contains the maximum value
+    in $D'$ (since it is assumed to be sorted in descending order), and
+    $\abs{D'} = n - 1$.\\
+
+    If $d_{1} > |D'| = n - 1$ we have an invalid degree sequence,
+    as the maximum degree in any simple graph is $n - 1$. Additionally if
+    $d_{1} < 0$ the degree sequence is invalid as no vertex can have a negative
+    degree.  The algorithm correctly reports this and returns false.\\
+
+    Since $\{v_{1}, v_{i}\} \in E, 2 \leq i \leq d_{1}+1$,
+    removing $d_{1}$ from the degree sequence will result in a new graph with
+    degree sequence $d_{2} - 1, d_{3} - 1,..,d_{d_{1}+1} - 1,d_{d_{1}},..,d_{n}$. \\
+
+    The following for loop will decrement each of
+    $d_{2},..,d_{d_{1}+1}$ by 1 from $D'$ producing\\
+    $d_{2}-1,d_{3}-1,..,d_{d_{1}+1}-1,d_{d_{1}},..,d_{n}$ i.e. $D'$ will represent
+    the degree sequence of $V - \{v_{1}\}$. \\
+
+    MaintainSort has previously been proven to correctly resort the elements
+    of a linked list, thus $D'$ will be sorted in descending order following
+    the call to it. \\
+
+    Finally, IsValidGraph'($D'$) will correctly identify whether a graph
+    exists with the degree sequence $D'$ by the induction hypothesis since
+    $|D'| = n - 1 < n$ and $D'$ is sorted in descending order. \\
+
+    Therefore $\forall n > 0$ Algorithm IsValidGraph correctly determines if a
+    graph exists with a given degree sequence of size $n$. Hence, the correctness
+    is proved.
+  \end{lemma}
+
+  \begin{lemma}{3.2} Algorithm IsValidGraph graphs runs in O($nlgn$ + D) time where
+    $n = \abs{V}$ and $D = \sum_{i=1}^{n} d_{i}$
+    \leavevmode \\
+
+    \textbf{Sorting:} Sorting the degree sequence requires at most $nlgn$ operations \\
+
+    \textbf{Recursive calls:} Since $IsValidGraph'$ removes at most 1 element from
+    $V$ and terminates when $V$ is empty, we have at most $n$ calls to IsValidGraph'.
+    Further, each recursive call performs $d_{1}$ operations within the for
+    loop in order to decrement each of $d_{2},d_{3},..,d_{d_{1}+1}$. The recurrence
+    can thus be expressed as,
+    \begin{align*}
+      T(n) = \begin{cases}
+                T(n - 1) + d_{1} &, \text{if n $>$ 0} \\
+                1                &, \text{if n = 0}
+             \end{cases}
+    \end{align*}
+    In the worst case each of the $n$ degrees wil be a maximum (i.e. $d_{1}$) at some point,
+    therefore the total complexity of the recursive calls would be
+    \begin{align*}
+      \sum_{i=1}^{n} d_{i}
+    \end{align*}
+
+    \textbf{Total:} In summation,
+    \begin{align*}
+      T(n) & = O(nlgn) + \sum_{i=1}^{n} d_{i} & \\
+           & = O(nlgn) + D & \\
+           & = O(nlgn + D) &
+    \end{align*}
   \end{lemma}
 \end{question}
 
