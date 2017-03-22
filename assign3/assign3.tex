@@ -31,6 +31,7 @@
 \SetKwInput{KwInput}{Input}
 \SetKwInput{KwOutput}{Output}
 \SetKwInput{KwLet}{Let}
+\SetKwProg{Fn}{Function}{}{}
 
 \begin{document}
 
@@ -166,6 +167,54 @@
 \end{question}
 
 \begin{question}{2 (a)}
+  \begin{proof}
+    Given $s_{i} < s_{j} \land h_{i} < h_{j}$, by symmetry 3 different cases arise: \\ \\
+    \textbf{Case 1:} $s_{i} < s_{j} \leq h_{i} < h_{j}$
+    We thus have,
+    \begin{align*}
+      \abs{h_{j} - s_{j}} + \abs{h_{i} - s_{i}} = h_{j} - s_{j} + h_{i} - s_{i}
+    \end{align*}
+    And,
+    \begin{align*}
+      \abs{h_{j} - s_{i}} + \abs{h_{i} - s_{j}} = h_{j} - s_{i} + h_{i} - s_{j}
+    \end{align*}
+    I.e.
+    \begin{align*}
+      \abs{h_{j} - s_{j}} + \abs{h_{i} - s_{i}} = \abs{h_{j} - s_{i}} + \abs{h_{i} - s_{j}}
+    \end{align*}
+
+    \textbf{Case 2:} $s_{i} \leq h_{i} \leq s_{j} \leq h_{j}$
+    We thus have,
+    \begin{align*}
+      \abs{h_{j} - s_{j}} + \abs{h_{i} - s_{i}} = h_{j} - s_{j} + h_{i} - s_{i}
+    \end{align*}
+    And,
+    \begin{align*}
+      \abs{h_{j} - s_{i}} + \abs{h_{i} - s_{j}} = h_{j} - s_{i} + s_{j} - h_{i}
+    \end{align*}
+    I.e.,
+    \begin{align*}
+      & -(s_{j} - h_{i}) \leq s_{j} - h_{i} & \text{($s_{j} \geq h_{i} \Rightarrow s_{j} - h_{i} \geq 0$)}
+    \end{align*}
+
+    \textbf{Case 3:} $s_{i} \leq h_{i} < h_{j} \leq s_{j}$
+    We thus have,
+    \begin{align*}
+      \abs{h_{j} - s_{j}} + \abs{h_{i} - s_{i}} = s_{j} - h_{j} + h_{i} - s_{i}
+    \end{align*}
+    And,
+    \begin{align*}
+      \abs{h_{j} - s_{i}} + \abs{h_{i} - s_{j}} = h_{j} - s_{i} + s_{j} - h_{i}
+    \end{align*}
+    I.e.,
+    \begin{align*}
+      & -(h_{j} - h_{i}) \leq h_{j} - h_{i} & \text{($h_{j} \geq h_{i} \Rightarrow h_{j} - h_{i} \geq 0$)}
+    \end{align*}
+
+    The remaining cases can be expressed by simply swapping $h_{i}$ with
+    $s_{i}$ and $s_{j}$ with $h_{j}$. \\
+    Therefore the statement holds true for all cases.
+  \end{proof}
 \end{question}
 
 \begin{question}{2 (b)}
@@ -176,9 +225,7 @@
     \item Pair $H_{i}$ with $S_{j}$, in which case $D[i,\ j] = \abs{H_{i} - S_{j}} + D[i + 1, j + 1]$
     \item Don't pair $H_{i}$ with $S_{j}$, in which case $D[i,\ j] = D[i,\ j + 1]$
   \end{itemize}
-  The optimal result is thus the minimum of the two options.
-  
-  \pagebreak
+  The optimal result is thus the minimum of the two options. \\
 
   \textbf{Base cases:}
   \begin{itemize}
@@ -273,15 +320,13 @@
   \end{lemma}
 \end{question}
 
-\pagebreak
-
 \begin{question}{3 (a)}
   \leavevmode
   \begin{proof}
     Let G = (V, E) be a connected simple graph such that $\exists j, 1 \leq j \leq d_{1} + 1,\ \{v_{1}, v_{j}\} \notin E$. \\ \\
     Let $v_{j} \in V, \{v_{1}, v_{j}\} \notin E, 1 \leq j \leq d_{1} + 1$. \\
-    Since $v_{1}$ is adjacent to $d_{1}$ verticies, and $\abs{\{v_{i}\ |\ 2 \leq i \leq d_{1} + 1\} - \{v_{j}\}} = d_{1} - 1$
-    we have,
+    Since $v_{1}$ is adjacent to $d_{1}$ verticies, and $\abs{\{v_{i}\ |\ 2 \leq i \leq d_{1} + 1\} - \{v_{j}\}} = d_{1} - 1$,
+    $v_{1}$ must be adjacent to a vertex outside of this range.  That is,
     \begin{align*}
       \exists v_{\ell} \in V,\ d_{1} + 1 < \ell \leq n, \{v_{1}, v_{\ell}\} \in E
     \end{align*}
@@ -298,7 +343,7 @@
 \end{question}
 
 \begin{question}{3 (b)}
-  \leavevmode 
+  \leavevmode
   \begin{proof}
     We must construct a graph $G'$ with the same degree sequence as $G$, but
     $\{v_{1}, v_{j}\} \in E'$. \\
@@ -319,6 +364,89 @@
     Thus $G'$ contains the same degree sequence as $G$, but contains an edge
     from $v_{1}$ to $v_{j}$.
   \end{proof}
+\end{question}
+
+\begin{question}{3 (c)}
+  \leavevmode \\ \\
+  \textbf{Idea:} After sorting the degree sequence, we can apply the theorem
+  proved in Question 3 (b) to assert that there exists a graph with an identical
+  degree sequence such that \\
+  $\forall v_{i}, \{v_{1}, v_{i}\} \in E, 2 \leq i \leq d_{1}+1$.  Thus by
+  removing $v_{1}$ from the graph, we reduce the degree of the following $d_{1}$
+  vertices by $1$.  This process can be continued until:
+  \begin{enumerate}
+      \item We are left with a single vertex of degree 0.  In this case we have
+        a valid graph.
+      \item The degree of the highest vertex is greater than $\abs{V} - 1$.
+        In this case the graph is invalid, as the degree of a single vertex
+        cannot be more than $\abs{V} - 1$ in a simple graph.
+  \end{enumerate}
+  The degree sequence shall be stored in a \textit{linked list} to allow for
+  constant time removal and reordering of the elements.
+
+  \begin{algorithm}[H]
+    \caption{IsValidGraph(D)}
+    \KwInput{$D[1..n]$ a \textit{linked list} of integers}
+    \KwOutput{Whether or not a graph exists with the degree sequence D}
+    \BlankLine
+
+
+    \Begin{
+      SortDescending(D)\;
+      \KwRet{IsValidGraph'(D)}\;
+    }
+
+    \BlankLine
+    \Fn{IsValidGraph'($D_{sorted}$)}{
+      \Begin{
+        \If{$D_{sorted}$ is empty} {
+          \KwRet{true}\;
+        }
+        \BlankLine
+
+        \tcp{Remove the first element and return it}
+        $d_{1}$ = pop\_first($D_{sorted}$)\;
+        \BlankLine
+        \tcp{Pointer to the head of the linked list}
+        ptr := head($D_{sorted}$)\;
+        \For{i $\leftarrow$ 1 \KwTo $d_{1}$} {
+          \If {ptr == $null$} {
+            \KwRet{false}\;
+          }
+          ptr.value = ptr.value - 1\;
+          ptr = ptr.next\;
+        }
+        \BlankLine
+        MaintainSort($D_{sorted}$)\;
+        \KwRet{IsValidGraph'($D_{sorted}$)}\;
+      }
+    }
+  \end{algorithm}
+
+  \begin{lemma}{3.1} Algorithm IsValidGraph correctly determines if a graph exists
+    with the provided degree sequence
+    \leavevmode \\ \\
+    \textbf{Note:} IsValidGraph simply sorts the degree sequence in descending order
+    and then calls IsValidGraph'.  The remainder of this proof will reference
+    IsValidGraph', and assume the initial input was sorted.  This sorting will
+    be accounted for in the following time complexity analysis.\\
+
+    We shall show correctness by induction on the input size $n$. \\
+
+    (Induction Basis) $n = 0$ The null graph is a graph with an empty degree sequence.
+    Therefore there does exist a graph when $n = $.  The algorithm will clearly
+    return true as $D_{sorted}$ will be empty upon the initial call.  Therefore
+    the algorithm works correctly. \\
+
+    \pagebreak
+
+    (Induction Hypothesis) Suppose $\forall k < n (n > 0)$, the algorithm correctly
+    determines if there exists a graph with the given degree sequence of size $k$. \\
+
+    (Induction Step) Let $D'$ be a degree sequence of size $n$ sorted in descending order.  Following
+    the call to pop\_first on Line 4, $d_{1}$ contains the maximum value in $D'$ (since it is assumed to
+    be sorted in descending order), and $\abs{D'} = n - 1$.
+  \end{lemma}
 \end{question}
 
 \end{document}
