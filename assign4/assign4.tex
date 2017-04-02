@@ -1,0 +1,109 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[none]{hyphenat}
+\usepackage{mathtools}
+\usepackage{verbatim}
+\usepackage[ruled]{algorithm2e}
+\setlength{\parindent}{0pt}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+  \newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+
+\SetKwInput{KwInput}{Input}
+\SetKwInput{KwOutput}{Output}
+\SetKwInput{KwLet}{Let}
+\SetKwProg{Fn}{Function}{}{}
+
+\begin{document}
+
+\title{Assignment 4}%replace X with the appropriate number
+\author{Quinn Perfetto, 104026025\\ %replace with your name
+ 60-454 Design and Analysis of Algorithms} %if necessary, replace with your course title
+
+\maketitle
+
+\begin{question}{1}
+  \begin{proof} First we show that $\Pi \in \textbf{NP}$ \\ \\
+    Let $\pi \in \Pi$. \\ \\
+    As every $\Pi$ logical expression is a CNF logical expression with exactly
+    three literals, \\ $\pi \in 3SAT$. \\ \\
+    Since 3SAT is \textbf{NP}-complete, there exists a polynomial time nondeterministic
+    algorithm $N$ solving 3SAT. \\ \\
+    Now,
+    \begin{align*}
+      \pi  & \text{ is a yes-instance of } \Pi \\
+      \iff & \pi \text{ is a yes-instance of } 3SAT \\
+      \iff & \text{algorithm } N \text{ outputs a yes on input } \pi
+    \end{align*}
+    Therefore $\Pi \in \textbf{NP}$. \\
+
+    Next, we prove that $3SAT \alpha \Pi$. \\
+
+    Let $C = c_{1} \land c_{2} \land ... \land c_{m}$ be a CNF logical expression
+    in which each $c_{i}$ contains exactly three literals, i.e. $C$ is a problem instance of 3SAT.
+    Let $U = \{u_{1}, u_{2}, ... , u_{n}\}$ be the set of variables in $C$. \\
+
+    For each $c_{i}$, $1 \leq i \leq m$ we shall construct a $\Pi$ logical expression
+    $c'_{i} \in \{x_{i}, y_{i}, z_{i}, a_{i}, b_{i}, c_{i}, d_{i}\}$
+    such that the $\Pi$ CNF expression $C' = c'_{1} \land c'_{2} \land ... \land c'_{m}$
+    is satisfiable with exactly 1 literal per clause being assigned a true value
+    if and only if $C$ is satisfiable. \\
+
+    Let $c_{j} = x_{j} \vee y_{j} \vee z_{j}$. The corresponding $c'_{j}$ is
+    defined as
+    \begin{align*}
+      (\neg x_{j} \vee a_{j} \vee b_{j}) \land (y_{j} \vee b_{j} \vee c_{j}) \land (\neg z_{j} \land c_{j} \land d_{j})
+    \end{align*}
+    where $a_{j}, b_{j}, c_{j}, d_{j}$ are newly created literals.
+    Let $U' = U \cup (\bigcup_{j=1}^{m} \{a_{j}, b_{j}, c_{j}, d_{j}\})$. \\
+
+    By construction each clause of $C'$ contains exactly three literals. \\
+
+    It is also easily verifiable that $\abs{c'_{j}} = 3\abs{c_{j}}$ since each
+    clause in $C$ produces exactly 3 clauses in $C'$.  Additionally, 4 new variables
+    are introduced into $U'$ for each clause in $C$, i.e. $\abs{U'} = 4\abs{U}$. \\
+
+    Thus the transformation takes a total of $O(3m + 4m) = O(m) = O(\abs{C})$ operations.
+    I.e. the transformation can be done in polynomial time. \\
+
+    Next we shall show that,
+    \begin{align*}
+      \text{C' is satisfiable if and only if C is is satisfiable}
+    \end{align*}
+    Let $t:U \rightarrow \{true, false\}$ be a truth assignment satisfying $C$. \\
+    As $C = c_{1} \land c_{2} \land ... \land c_{2}$ is true under $t$, at least
+    one literal in each $c_{j}$ must evaluate to true.
+    7 cases arise: (note that unassigned variables are assumed to be false)
+    \begin{enumerate}
+      \item $t(x_{j}) = true$.\\
+        In this case we assign $a_{j} = true$ and $b_{j} = true$.
+        We thus have a single literal in each clause of $c'_{j}$ evaluated to true, and
+        the expression is satisifed.
+      \item $t(y_{j}) = true$. \\
+        $c'_{j}$ is true.
+      \item $t(z_{j}) = true$ \\
+
+    \end{enumerate}
+  \end{proof}
+\end{question}
+
+\end{document}
