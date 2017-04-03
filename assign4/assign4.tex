@@ -99,10 +99,48 @@
         We thus have a single literal in each clause of $c'_{j}$ evaluated to true, and
         the expression is satisifed.
       \item $t(y_{j}) = true$. \\
-        $c'_{j}$ is true.
+        $c'_{j}$ is true, and each clause has a single true literal.
       \item $t(z_{j}) = true$ \\
-
+        We assign $c_{j} = true$ and thus have a single positive literal in each clause,
+        and the expression is satisifed.
+      \item $t(x_{j}, y_{j}) = true$ \\
+        We assign $a_{j} = true$ and $d_{j} = true$.
+      \item $t(x_{j}, z_{j}) = true$ \\
+        We assign $a_{j} = true$ and $c_{j} = true$.
+      \item $t(y_{j}, z_{j}) = true$ \\
+        We assign $d_{j} = true$.
+      \item $t(x_{j}, y_{j}, z_{j}) = true$ \\
+        See case 4.
     \end{enumerate}
+    In all of the above cases,
+    \begin{align*}
+      \text{C is satisfiable} \Rightarrow \text{C' is satisfiable and each clause has a single true literal}
+    \end{align*}
+
+    Conversely let $t':U \rightarrow \{true, false\}$ be a truth assignment satisfying
+    $C'$ such that each clause contains a single true literal. \\
+
+    Suppose in the original 3SAT expression $\exists c_{i}, x_{i} = y_{i} = z_{i} = false$, i.e.
+    $c_{i}$ is unsatisfiable.  Since $t'$ was assumed to be a valid truth assignment
+    for $\Pi$, one of $b_{i}$ or $c_{i}$ must be true (otherwise we have a contradiction).
+    If $b_{i}$ is true, we have $\neg x$ and $b_{i}$ both true in the same clause, which
+    contradicts the assumption that $t'$ is a valid truth assignment.  Similarly
+    if $c_{i}$ is true, we have $\neg z$ and $c_{i}$ belonging to the same clause,
+    a contradiction of the validity of $t'$.  Therefore $c_{i}$ must be satisifiable.\\
+
+    I.e.,
+    \begin{align*}
+      \text{C' is satisfiable and each clause has a single true literal} \Rightarrow \text{C is satisfiable}
+    \end{align*}
+
+    Thus we have,
+    \begin{align*}
+      \text{C is satisfiable} \iff \text{C' is satisfiable and each clause has a single true literal}
+    \end{align*}
+
+    Hence we have 3SAT $\alpha$ $\Pi$. \\
+    Thus $\Pi \in \textbf{NP} \land \text{3SAT} \alpha \Pi$. \\
+    Hence $\Pi \in \textbf{NP-}\text{Complete}$.
   \end{proof}
 \end{question}
 
