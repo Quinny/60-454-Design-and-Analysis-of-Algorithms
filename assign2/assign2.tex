@@ -120,7 +120,7 @@
 
   \begin{lemma}{1.2} Algorithm FlipSort correctly produces a sorted list.
     \leavevmode \\ \\
-    Induction on the size of the input $n$.\\
+    We shall show this by Induction on the size of the input $n$.\\
     (Induction Basis) If $n=1$ FlipSort performs no operations and returns a
     single element list which is vacuously sorted.\\
     (Induction Hypothesis) Assume that FlipSort correctly sorts all lists of size $n \leq k,\ n > 1$. \\
@@ -323,7 +323,7 @@
     & cc_{1} + cc_{2} + 1 \leq c & \\
     \Rightarrow & 1 \leq c - cc_{1} - cc_{2} &\\
     \Rightarrow & 1 \leq c(1 - (c_{1} + c_{2})) &\\
-    \Rightarrow & \frac{1}{1 - (c_{1} + c_{2})} \leq c & (c_{1} + c_{2} < 1)\\
+    \Rightarrow & \frac{1}{1 - (c_{1} + c_{2})} \leq c & (c_{1} + c_{2} < 1\Rightarrow 1 - (c_{1} + c_{2}) > 0)\\
   \end{align*}
   Thus $T(n) \leq cn$ when $\frac{1}{1 - (c_{1} + c_{2})} \leq c$, $\forall n > 1$. \\ \\
   (Induction Basis) Let $T(1) = a$, where $a$ is a constant.\\
